@@ -84,17 +84,6 @@ module.exports = {
         'vue/script-indent': ['error', 4, { switchCase: 1 }],
         // отступы в HTML = 4 символа
         'vue/html-indent': ['error', 4],
-        // самозакрытые теги недопустимы
-        'vue/html-self-closing': [
-            'error',
-            {
-                html: {
-                    void: 'always',
-                    normal: 'never',
-                    component: 'never',
-                },
-            },
-        ],
         // если несколько атрибутов, то первый атрибут тоже с новой строки
         'vue/first-attribute-linebreak': ['error'],
         // закрывающая скобка тэга не должна зависать на следующей строке
