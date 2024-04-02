@@ -3,7 +3,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-
+console.log('POSTGRES_PORT' + process.env.PRIVATE_KEY);
 @Module({
     imports: [
         ConfigModule.forRoot({ envFilePath: '.env' }),

@@ -44,6 +44,7 @@ import {
     TabView,
     TabPanel,
     SplitButton,
+    Password
 } from './components';
 
 export default function regPrimeVue(app: App) {
@@ -94,4 +95,5 @@ export default function regPrimeVue(app: App) {
     app.component('PTabView', TabView);
     app.component('PTabPanel', TabPanel);
     app.component('PSplitButton', SplitButton);
+    app.component('PPassword', Password);
 }
