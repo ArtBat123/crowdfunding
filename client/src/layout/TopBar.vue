@@ -27,16 +27,34 @@
             </div>
             <div class="right py-2">
                 <Divider layout="vertical" />
-                <Button
-                    label="Вход"
-                    link
-                    @click="onLoginClick"
-                />
-                <Button
-                    label="Регистрация"
-                    link
-                    @click="onRegistrationClick"
-                />
+                <div
+                    v-if="user"
+                    class="flex align-items-center h-full"
+                >
+                    <RouterLink to="/create-project">
+                        <Button
+                            label="Начать проект"
+                            outlined
+                            class="mr-4"
+                        />
+                    </RouterLink>
+                    <span class="pi pi-user user-icon"></span>
+                </div>
+                <div
+                    v-else
+                    class="flex align-items-center h-full"
+                >
+                    <Button
+                        label="Вход"
+                        link
+                        @click="onLoginClick"
+                    />
+                    <Button
+                        label="Регистрация"
+                        link
+                        @click="onRegistrationClick"
+                    />
+                </div>
             </div>
         </nav>
     </div>
@@ -48,11 +66,15 @@ import RegistrationDialog from '@/components/auth/RegistrationDialog.vue';
 import Button from '@/components/ui/Button.vue';
 import Divider from '@/components/ui/Divider.vue';
 import { useLayoutStore } from '@/stores/layout';
+import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
 import { RouterLink } from 'vue-router';
 
 const layoutStore = useLayoutStore();
+const authStore = useAuthStore();
 const { isVisibleRegistration, isVisibleLogin } = storeToRefs(layoutStore);
+const { user } = storeToRefs(authStore);
+
 const logoSrc = new URL('@/assets/svg/logo.svg', import.meta.url);
 
 function onRegistrationClick() {
@@ -83,5 +105,8 @@ function onLoginClick() {
     height: 100%;
     display: flex;
     align-items: center;
+}
+.user-icon {
+    font-size: 25px;
 }
 </style>

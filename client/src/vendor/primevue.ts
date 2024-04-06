@@ -1,3 +1,4 @@
+/* eslint-disable vue/no-reserved-component-names */
 import type { App } from 'vue';
 import {
     PrimeVue,
@@ -44,7 +45,11 @@ import {
     TabView,
     TabPanel,
     SplitButton,
-    Password
+    Password,
+    TabMenu,
+    RadioButton,
+    InputGroup,
+    InputGroupAddon,
 } from './components';
 
 export default function regPrimeVue(app: App) {
@@ -59,41 +64,45 @@ export default function regPrimeVue(app: App) {
     app.directive('badge', BadgeDirective);
     app.directive('ripple', Ripple);
     app.directive('styleclass', StyleClass);
-    app.component('PAvatar', Avatar);
-    app.component('PButton', Button);
-    app.component('PDivider', Divider);
-    app.component('PImage', Image);
-    app.component('PPanelMenu', PanelMenu);
-    app.component('PProgressBar', ProgressBar);
-    app.component('PSidebar', Sidebar);
-    app.component('PToolbar', Toolbar);
-    app.component('PMenu', Menu);
-    app.component('PCard', Card);
-    app.component('PContextMenu', ContextMenu);
-    app.component('POverlayPanel', OverlayPanel);
-    app.component('PCalendar', Calendar);
-    app.component('PSelectButton', SelectButton);
-    app.component('PDropdown', Dropdown);
-    app.component('PProgressSpinner', ProgressSpinner);
-    app.component('PSplitterPanel', SplitterPanel);
-    app.component('PSplitter', Splitter);
-    app.component('PDataTable', DataTable);
-    app.component('PColumn', Column);
-    app.component('PTreeTable', TreeTable);
-    app.component('PCheckbox', Checkbox);
-    app.component('PInputText', InputText);
-    app.component('PListbox', Listbox);
-    app.component('PVirtualScroller', VirtualScroller);
-    app.component('PDialog', Dialog);
-    app.component('PMultiSelect', MultiSelect);
-    app.component('PToast', Toast);
-    app.component('PInputNumber', InputNumber);
-    app.component('PFileUpload', FileUpload);
-    app.component('PAccordion', Accordion);
-    app.component('PAccordionTab', AccordionTab);
-    app.component('PTree', Tree);
-    app.component('PTabView', TabView);
-    app.component('PTabPanel', TabPanel);
-    app.component('PSplitButton', SplitButton);
-    app.component('PPassword', Password);
+    app.component('Avatar', Avatar);
+    app.component('Button', Button);
+    app.component('Divider', Divider);
+    app.component('Image', Image);
+    app.component('PanelMenu', PanelMenu);
+    app.component('ProgressBar', ProgressBar);
+    app.component('Sidebar', Sidebar);
+    app.component('Toolbar', Toolbar);
+    app.component('Menu', Menu);
+    app.component('Card', Card);
+    app.component('ContextMenu', ContextMenu);
+    app.component('OverlayPanel', OverlayPanel);
+    app.component('Calendar', Calendar);
+    app.component('SelectButton', SelectButton);
+    app.component('Dropdown', Dropdown);
+    app.component('ProgressSpinner', ProgressSpinner);
+    app.component('SplitterPanel', SplitterPanel);
+    app.component('Splitter', Splitter);
+    app.component('DataTable', DataTable);
+    app.component('Column', Column);
+    app.component('TreeTable', TreeTable);
+    app.component('Checkbox', Checkbox);
+    app.component('InputText', InputText);
+    app.component('Listbox', Listbox);
+    app.component('VirtualScroller', VirtualScroller);
+    app.component('Dialog', Dialog);
+    app.component('MultiSelect', MultiSelect);
+    app.component('Toast', Toast);
+    app.component('InputNumber', InputNumber);
+    app.component('FileUpload', FileUpload);
+    app.component('Accordion', Accordion);
+    app.component('AccordionTab', AccordionTab);
+    app.component('Tree', Tree);
+    app.component('TabView', TabView);
+    app.component('TabPanel', TabPanel);
+    app.component('SplitButton', SplitButton);
+    app.component('Password', Password);
+    app.component('TabMenu', TabMenu);
+    app.component('RadioButton', RadioButton);
+    app.component('InputGroup', InputGroup);
+    app.component('InputGroupAddon', InputGroupAddon);
 }

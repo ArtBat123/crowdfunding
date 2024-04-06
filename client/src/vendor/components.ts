@@ -95,6 +95,8 @@ import TreeTable from 'primevue/treetable';
 import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
 import ProgressBar from 'primevue/progressbar';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
 
 export {
     PrimeVue,
@@ -194,4 +196,6 @@ export {
     TriStateCheckbox,
     VirtualScroller,
     ProgressBar,
+    InputGroup,
+    InputGroupAddon,
 };

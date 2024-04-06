@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '@/pages/HomeView.vue';
 import AppLayout from '@/layout/AppLayout.vue';
 
 const router = createRouter({
@@ -18,6 +17,19 @@ const router = createRouter({
                     path: '/projects',
                     name: 'projects',
                     component: () => import('@/pages/ProjectsPage.vue'),
+                },
+                {
+                    path: '/create-project',
+                    name: 'createProject',
+                    component: () => import('@/pages/ProjectCreationPage.vue'),
+                    children: [
+                        {
+                            path: 'base',
+                            name: 'createProjectBase',
+                            component: () =>
+                                import('@/components/projectCreation/ProjectCreationBase.vue'),
+                        },
+                    ],
                 },
             ],
         },

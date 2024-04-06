@@ -1,29 +1,29 @@
 <template>
-    <PDialog
+    <Dialog
         v-model:visible="isVisibleRegistration"
         header="Регистрация"
         :style="{ width: '25rem' }"
     >
         <form>
-            <PInputText
+            <InputText
                 v-model="firstName"
                 placeholder="Имя"
                 autocomplete="given-name"
                 class="mb-3 w-full"
             />
-            <PInputText
+            <InputText
                 v-model="lastName"
                 placeholder="Фамилия"
                 autocomplete="family-name"
                 class="mb-3 w-full"
             />
-            <PInputText
+            <InputText
                 v-model="email"
                 placeholder="Email"
                 type="email"
                 class="mb-3 w-full"
             />
-            <PPassword
+            <Password
                 v-model="password"
                 toggle-mask
                 :feedback="false"
@@ -44,7 +44,7 @@
                         @click="toggleCallback"
                     ></span>
                 </template>
-            </PPassword>
+            </Password>
             <Button
                 label="Создать аккаунт"
                 type="submit"
@@ -54,7 +54,7 @@
         <div class="question-has-account">
             <span>Уже есть аккаунт?</span><strong class="login">Войти</strong>
         </div>
-    </PDialog>
+    </Dialog>
 </template>
 <script setup lang="ts">
 import { useLayoutStore } from '@/stores/layout';
