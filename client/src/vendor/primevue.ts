@@ -50,6 +50,8 @@ import {
     RadioButton,
     InputGroup,
     InputGroupAddon,
+    IconField,
+    InputIcon,
 } from './components';
 
 export default function regPrimeVue(app: App) {
@@ -105,4 +107,6 @@ export default function regPrimeVue(app: App) {
     app.component('RadioButton', RadioButton);
     app.component('InputGroup', InputGroup);
     app.component('InputGroupAddon', InputGroupAddon);
+    app.component('IconField', IconField);
+    app.component('InputIcon', InputIcon);
 }

@@ -1,16 +1,14 @@
 <template>
-    <nav class="navigation">
-        <TabMenu
-            :model="tabItems"
-            class="navigation-menu"
-            @tab-change="onTabChange"
-        ></TabMenu>
-    </nav>
-    <div class="container">
-        <RouterView></RouterView>
-    </div>
+    <TabView>
+        <TabPanel header="Основное">
+            <ProjectCreationBase />
+        </TabPanel>
+        <TabPanel header="Награды"></TabPanel>
+        <TabPanel header="О проекте"></TabPanel>
+    </TabView>
 </template>
 <script setup lang="ts">
+import ProjectCreationBase from '@/components/projectCreation/ProjectCreationBase.vue';
 import type { TabMenuChangeEvent } from 'primevue/tabmenu';
 import { useRouter } from 'vue-router';
 

@@ -42,16 +42,18 @@
             <div class="input-field">
                 <label>Категория</label>
                 <Dropdown
-                    v-model="projectBasicData.categoryId"
-                    :options="cities"
+                    v-model="projectBasicData.category"
+                    :options="projectCategories"
+                    option-label="name"
                     class="input-field-value"
                 />
             </div>
             <div class="input-field">
                 <label>Подкатегория</label>
                 <Dropdown
-                    v-model="projectBasicData.subcategoryId"
-                    :options="cities"
+                    v-model="projectBasicData.subcategory"
+                    :options="projectBasicData.category?.subcategoryList"
+                    option-label="name"
                     class="input-field-value"
                 />
             </div>
@@ -66,8 +68,8 @@
                 вашего проекта.
             </p>
         </div>
-        <div class="right-section-block">
-            <MainImageUploader />
+        <div class="right-section-block image-input">
+            <ImageUploader class="h-full" />
         </div>
     </section>
     <Divider />
@@ -106,7 +108,7 @@
             <div class="project-duration-type mb-2">
                 <div class="radio-button-container">
                     <RadioButton
-                        v-model="projectDurationType"
+                        v-model="projectBasicData.projectDurationType"
                         input-id="numberDays"
                         name="projectDurationType"
                         :value="ProjectDurationType.NumberDays"
@@ -119,7 +121,7 @@
                     </label>
                 </div>
                 <div
-                    v-if="projectDurationType === ProjectDurationType.NumberDays"
+                    v-if="projectBasicData.projectDurationType === ProjectDurationType.NumberDays"
                     class="project-duration-input-panel"
                 >
                     <label for="numberDays"> Введите количество дней</label>
@@ -132,7 +134,7 @@
             <div class="project-duration-type">
                 <div class="radio-button-container">
                     <RadioButton
-                        v-model="projectDurationType"
+                        v-model="projectBasicData.projectDurationType"
                         input-id="expirationDate"
                         name="projectDurationType"
                         :value="ProjectDurationType.ExpirationDate"
@@ -145,7 +147,9 @@
                     </label>
                 </div>
                 <div
-                    v-if="projectDurationType === ProjectDurationType.ExpirationDate"
+                    v-if="
+                        projectBasicData.projectDurationType === ProjectDurationType.ExpirationDate
+                    "
                     class="project-duration-input-panel"
                 >
                     <label for="date">Дата окончания проекта</label>
@@ -170,24 +174,30 @@
         </div>
     </section>
     <div class="finish-button">
-        <Button label="Сохранить"></Button>
+        <Button
+            label="Сохранить"
+            @click="saveProject"
+        ></Button>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import Divider from '../ui/Divider.vue';
-import MainImageUploader from './MainImageUploader.vue';
+import ImageUploader from '@/components/ui/ImageUploader.vue';
+import { useDictionariesStore } from '@/stores/dictionaries/dictionaries';
+import { storeToRefs } from 'pinia';
+import api from '@/api/api';
 
 enum ProjectDurationType {
-    ExpirationDate,
-    NumberDays,
+    ExpirationDate = 'expiration_date',
+    NumberDays = 'number_days',
 }
 interface ProjectBasicData {
     title?: string;
     subtitle?: string;
-    categoryId?: number;
-    subcategoryId?: number;
+    category?: ProjectCategory;
+    subcategory?: ProjectSubcategory;
     imageUrl?: string;
     fundingGoal?: number;
     projectDurationType?: ProjectDurationType;
@@ -196,11 +206,35 @@ interface ProjectBasicData {
     numberDays?: number;
 }
 
-const projectDurationType = ref<ProjectDurationType>();
+const dictionariesStore = useDictionariesStore();
+const { projectCategories } = storeToRefs(dictionariesStore);
+const { getProjectCategories } = dictionariesStore;
+
 const projectBasicData = ref<ProjectBasicData>({});
+
+getProjectCategories();
+
+async function saveProject() {
+    const payload = {
+        title: projectBasicData.value.title,
+        subtitle: projectBasicData.value.subtitle,
+        fundingGoal: projectBasicData.value.fundingGoal,
+        projectDurationType: projectBasicData.value.projectDurationType,
+        expirationDate: projectBasicData.value.expirationDate,
+        numberDays: projectBasicData.value.numberDays,
+        imageUrl: 'test', //TODO
+        categoryId: projectBasicData.value.category?.id,
+        subcategoryId: projectBasicData.value.subcategory?.id,
+    };
+    await api.project.create(payload);
+    projectBasicData.value = {};
+}
 </script>
 
 <style scoped lang="scss">
+.image-input {
+    height: 250px;
+}
 h3 {
     font-weight: 500;
 }

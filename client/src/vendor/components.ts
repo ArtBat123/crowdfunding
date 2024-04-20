@@ -97,6 +97,8 @@ import VirtualScroller from 'primevue/virtualscroller';
 import ProgressBar from 'primevue/progressbar';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
 
 export {
     PrimeVue,
@@ -198,4 +200,6 @@ export {
     ProgressBar,
     InputGroup,
     InputGroupAddon,
+    IconField,
+    InputIcon,
 };

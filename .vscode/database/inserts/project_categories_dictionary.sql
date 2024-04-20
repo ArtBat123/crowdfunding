@@ -1,0 +1,14 @@
+insert into project_categories_dictionary values(1, 'Искусство', null);
+insert into project_categories_dictionary values(2, 'Комиксы', null);
+insert into project_categories_dictionary values(3, 'Ремесла', null);
+insert into project_categories_dictionary values(4, 'Танец', null);
+insert into project_categories_dictionary values(5, 'Дизайн', null);
+insert into project_categories_dictionary values(6, 'Мода', null);
+insert into project_categories_dictionary values(7, 'Кино', null);
+insert into project_categories_dictionary values(8, 'Еда', null);
+insert into project_categories_dictionary values(9, 'Игры', null);
+insert into project_categories_dictionary values(10, 'Журналистика', null);
+insert into project_categories_dictionary values(11, 'Музыка', null);
+insert into project_categories_dictionary values(12, 'Фотография', null);
+insert into project_categories_dictionary values(13, 'Технологии', null);
+insert into project_categories_dictionary values(14, 'Театр', null);

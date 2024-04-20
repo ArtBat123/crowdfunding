@@ -33,7 +33,7 @@
                 >
                     <RouterLink to="/create-project">
                         <Button
-                            label="Начать проект"
+                            label="Создать проект"
                             outlined
                             class="mr-4"
                         />

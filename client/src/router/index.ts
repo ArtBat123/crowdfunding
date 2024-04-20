@@ -16,20 +16,12 @@ const router = createRouter({
                 {
                     path: '/projects',
                     name: 'projects',
-                    component: () => import('@/pages/ProjectsPage.vue'),
+                    component: () => import('@/pages/ProjectListPage.vue'),
                 },
                 {
                     path: '/create-project',
                     name: 'createProject',
                     component: () => import('@/pages/ProjectCreationPage.vue'),
-                    children: [
-                        {
-                            path: 'base',
-                            name: 'createProjectBase',
-                            component: () =>
-                                import('@/components/projectCreation/ProjectCreationBase.vue'),
-                        },
-                    ],
                 },
             ],
         },
