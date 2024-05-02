@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { ProjectModule } from './project/project.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectCategoryModule } from './project-category/project-category.module';
+import { FilesModule } from './files/files.module';
 console.log('POSTGRES_PORT' + process.env.PRIVATE_KEY);
 @Module({
     imports: [
@@ -24,8 +25,8 @@ console.log('POSTGRES_PORT' + process.env.PRIVATE_KEY);
         UsersModule,
         ProjectModule,
         ProjectCategoryModule,
+        FilesModule,
     ],
-    controllers: [],
     providers: [],
 })
 export class AppModule {}
