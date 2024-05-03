@@ -99,6 +99,7 @@ import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
+import Editor from 'primevue/editor';
 
 export {
     PrimeVue,
@@ -202,4 +203,5 @@ export {
     InputGroupAddon,
     IconField,
     InputIcon,
+    Editor,
 };

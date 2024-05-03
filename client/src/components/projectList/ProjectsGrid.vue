@@ -5,6 +5,7 @@
             :key="project.id"
             :title="project.title"
             :subtitle="project.subtitle"
+            :image-url="project.imageUrl"
         />
     </div>
 </template>
@@ -23,7 +24,6 @@ projectList.value = res;
 
 <style scoped>
 .item {
-    background-color: red;
     margin: 10px;
     height: 200px;
 }

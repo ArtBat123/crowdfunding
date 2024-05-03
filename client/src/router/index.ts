@@ -19,9 +19,30 @@ const router = createRouter({
                     component: () => import('@/pages/ProjectListPage.vue'),
                 },
                 {
-                    path: '/create-project',
-                    name: 'createProject',
-                    component: () => import('@/pages/ProjectCreationPage.vue'),
+                    path: '/projects/:id?/edit',
+                    name: 'projectEditing',
+                    redirect: { name: 'projectBaseInfoEditing' },
+                    component: () => import('@/pages/ProjectEditingPage.vue'),
+                    children: [
+                        {
+                            path: 'base',
+                            name: 'projectBaseInfoEditing',
+                            component: () =>
+                                import('@/components/projectEditing/ProjectBaseInfo.vue'),
+                        },
+                        {
+                            path: 'rewards',
+                            name: 'projectRewards',
+                            component: () =>
+                                import('@/components/projectEditing/ProjectRewards.vue'),
+                        },
+                        {
+                            path: 'about',
+                            name: 'aboutProject',
+                            component: () =>
+                                import('@/components/projectEditing/AboutProject.vue'),
+                        },
+                    ],
                 },
             ],
         },

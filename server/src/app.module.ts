@@ -6,6 +6,7 @@ import { ProjectModule } from './project/project.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectCategoryModule } from './project-category/project-category.module';
 import { FilesModule } from './files/files.module';
+import { ProjectRewardsModule } from './project-rewards/project-rewards.module';
 console.log('POSTGRES_PORT' + process.env.PRIVATE_KEY);
 @Module({
     imports: [
@@ -26,6 +27,7 @@ console.log('POSTGRES_PORT' + process.env.PRIVATE_KEY);
         ProjectModule,
         ProjectCategoryModule,
         FilesModule,
+        ProjectRewardsModule,
     ],
     providers: [],
 })

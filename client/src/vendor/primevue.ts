@@ -52,6 +52,8 @@ import {
     InputGroupAddon,
     IconField,
     InputIcon,
+    Textarea,
+    Editor,
 } from './components';
 
 export default function regPrimeVue(app: App) {
@@ -109,4 +111,6 @@ export default function regPrimeVue(app: App) {
     app.component('InputGroupAddon', InputGroupAddon);
     app.component('IconField', IconField);
     app.component('InputIcon', InputIcon);
+    app.component('Textarea', Textarea);
+    app.component('Editor', Editor);
 }

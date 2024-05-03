@@ -1,11 +1,12 @@
 <template>
     <div>
         <input
-            id="file-upload"
+            :id="id"
             ref="fileInputEl"
             name="file-upload"
             type="file"
             accept=".jpg,.png"
+            class="file-uploader"
             @change="onImgSelect"
         />
         <div
@@ -49,6 +50,15 @@
 import AddImageIcon from '@/components/icons/AddImageIcon.vue';
 import { ref } from 'vue';
 
+interface Props {
+    id: string;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits<{
+    (e: 'upload', file: File): void;
+}>();
+
 const fileInputEl = ref<HTMLInputElement>();
 const selectedImgEl = ref<HTMLImageElement>();
 const selectedImg = ref<File | null>(null);
@@ -63,6 +73,7 @@ function onImgSelect(event: Event) {
     const file = target.files[0];
     selectedImg.value = file;
     selectedImgEl.value.src = URL.createObjectURL(file);
+    emit('upload', file);
 }
 function callFileInput() {
     fileInputEl.value?.click();
@@ -73,7 +84,7 @@ function clear() {
 </script>
 
 <style scoped lang="scss">
-#file-upload {
+.file-uploader {
     width: 0;
     height: 0;
     visibility: hidden;
@@ -81,7 +92,7 @@ function clear() {
 }
 .selected-image {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 38px);
     object-fit: cover;
 
     &-card {
@@ -93,6 +104,7 @@ function clear() {
     }
 }
 .buttons-bar {
+    height: 38px;
     margin-top: 6px;
     display: flex;
     justify-content: start;

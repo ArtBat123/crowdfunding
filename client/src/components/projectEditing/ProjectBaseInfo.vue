@@ -69,7 +69,11 @@
             </p>
         </div>
         <div class="right-section-block image-input">
-            <ImageUploader class="h-full" />
+            <ImageUploader
+                id="image"
+                class="h-full"
+                @upload="uploadFile"
+            />
         </div>
     </section>
     <Divider />
@@ -188,6 +192,7 @@ import ImageUploader from '@/components/ui/ImageUploader.vue';
 import { useDictionariesStore } from '@/stores/dictionaries/dictionaries';
 import { storeToRefs } from 'pinia';
 import api from '@/api/api';
+import { useRoute, useRouter } from 'vue-router';
 
 enum ProjectDurationType {
     ExpirationDate = 'expiration_date',
@@ -206,6 +211,7 @@ interface ProjectBasicData {
     numberDays?: number;
 }
 
+const router = useRouter();
 const dictionariesStore = useDictionariesStore();
 const { projectCategories } = storeToRefs(dictionariesStore);
 const { getProjectCategories } = dictionariesStore;
@@ -222,12 +228,19 @@ async function saveProject() {
         projectDurationType: projectBasicData.value.projectDurationType,
         expirationDate: projectBasicData.value.expirationDate,
         numberDays: projectBasicData.value.numberDays,
-        imageUrl: 'test', //TODO
+        imageUrl: projectBasicData.value.imageUrl,
         categoryId: projectBasicData.value.category?.id,
         subcategoryId: projectBasicData.value.subcategory?.id,
     };
-    await api.project.create(payload);
-    projectBasicData.value = {};
+    const project = await api.project.create(payload);
+    router.replace({ params: { id: project.id } });
+}
+async function uploadFile(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const { fileUrl } = await api.files.upload(formData);
+    projectBasicData.value.imageUrl = fileUrl;
 }
 </script>
 

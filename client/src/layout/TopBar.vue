@@ -31,7 +31,7 @@
                     v-if="user"
                     class="flex align-items-center h-full"
                 >
-                    <RouterLink to="/create-project">
+                    <RouterLink to="/projects/edit/base">
                         <Button
                             label="Создать проект"
                             outlined

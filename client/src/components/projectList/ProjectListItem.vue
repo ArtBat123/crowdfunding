@@ -2,7 +2,7 @@
     <div class="project-card">
         <div class="project-card-image">
             <Image
-                src="/src/assets/image/project-image.jpg"
+                :src="imageUrl || '/src/assets/image/project-image.jpg'"
                 alt="Image"
                 width="100%"
                 height="100%"
@@ -25,6 +25,7 @@
 interface Props {
     title: string;
     subtitle: string;
+    imageUrl: string;
 }
 
 const { subtitle, title } = defineProps<Props>();
