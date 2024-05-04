@@ -16,7 +16,7 @@
 </template>
 <script setup lang="ts">
 interface Props {
-    color: string;
+    color?: string;
 }
 
 const { color } = withDefaults(defineProps<Props>(), {

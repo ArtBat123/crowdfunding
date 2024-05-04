@@ -9,4 +9,12 @@ export default {
         const response = await HttpClient.get('project');
         return response.data;
     },
+    async get(id) {
+        const response = await HttpClient.get(`project/${id}`);
+        return response.data;
+    },
+    async updateStory(payload) {
+        const response = await HttpClient.put('project', payload);
+        return response.data;
+    },
 };

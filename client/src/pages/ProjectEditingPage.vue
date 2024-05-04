@@ -8,12 +8,15 @@
     <RouterView />
 </template>
 <script setup lang="ts">
+import { useProjectEditingStore } from '@/stores/projectEditing';
 import type { TabMenuChangeEvent } from 'primevue/tabmenu';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
+const { loadProjectById } = useProjectEditingStore();
+await loadProjectById(Number(route.params.id));
 const tabItems = [
     { label: 'Основное', icon: 'pi pi-home', routeName: 'projectBaseInfoEditing' },
     { label: 'Награды', icon: 'pi pi-home', routeName: 'projectRewards' },

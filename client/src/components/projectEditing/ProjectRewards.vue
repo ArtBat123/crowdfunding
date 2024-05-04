@@ -1,11 +1,12 @@
 <template>
-    <div>
-        <h1>Заполните награды для спонсоров</h1>
-        <div class="flex justify-content-between my-3">
-            <p style="max-width: 600px">
-                Награды мотивируют спонсоров поддержать ваш проект. В качестве награды можно
-                предложить физические предметы или особые впечатления
-            </p>
+    <div class="content-container">
+        <div class="my-6">
+            <h1 class="title">Заполните награды для спонсоров</h1>
+            <div class="subtitle">
+                <p>Награды мотивируют спонсоров поддержать ваш проект.</p>
+            </div>
+        </div>
+        <div class="flex justify-content-end mb-4">
             <Button
                 label="Создать награду"
                 icon="pi pi-plus"
@@ -41,3 +42,13 @@ function openCreateForm() {
     visibleEditDialog.value = true;
 }
 </script>
+<style scoped>
+.title {
+    text-align: center;
+    font-size: xx-large;
+}
+.subtitle {
+    text-align: center;
+    font-size: large;
+}
+</style>

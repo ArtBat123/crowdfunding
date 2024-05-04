@@ -23,4 +23,15 @@ export class ProjectService {
     async getAll() {
         return this.projectRepository.find();
     }
+
+    async get(id) {
+        return this.projectRepository.findOneBy({ id });
+    }
+
+    async updateStory(dto) {
+        await this.projectRepository.save({
+            id: dto.projectId,
+            story: dto.story,
+        });
+    }
 }

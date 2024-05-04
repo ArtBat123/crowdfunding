@@ -18,12 +18,6 @@
                         link
                     />
                 </RouterLink>
-                <RouterLink to="/about">
-                    <Button
-                        label="О нас"
-                        link
-                    />
-                </RouterLink>
             </div>
             <div class="right py-2">
                 <Divider layout="vertical" />
@@ -91,8 +85,8 @@ function onLoginClick() {
     width: 100%;
     padding: 0 1rem;
     height: var(--top-bar-menu-height);
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: 0 4px 2px -3px var(--color-border);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 2px -3px var(--border-color);
 }
 .navigation {
     flex-grow: 1;

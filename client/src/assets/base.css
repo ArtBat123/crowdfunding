@@ -1,8 +1,4 @@
-/* color palette from <https://github.com/vuejs/theme> */
 :root {
-    --top-bar-menu-height: 50px;
-    --max-content-width: 1280px;
-
     --blue-50: #f5f9ff;
     --blue-100: #d0e1fd;
     --blue-200: #abc9fb;
@@ -165,7 +161,6 @@
 *::after {
     box-sizing: border-box;
     margin: 0;
-    font-weight: normal;
 }
 
 body {

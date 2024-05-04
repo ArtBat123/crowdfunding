@@ -1,49 +1,57 @@
 <template>
-    <div>
-        <Editor
-            v-model="value"
-            :modules="{
-                toolbar: {
-                    container: '.p-editor-toolbar',
-                    handlers: { image: imageHandler },
-                },
-            }"
-        />
+    <div class="content-container mb-4">
+        <div class="title py-6">
+            <h1>Расскажите подробнее о проекте</h1>
+            <h2>
+                Расскажите потенциальным участникам больше о вашей проекте. Предоставьте детали,
+                которые будут мотивировать людей внести свой вклад.
+            </h2>
+        </div>
+        <div>
+            <Editor
+                v-model="projectData.story"
+                editor-style="min-height: 320px"
+            />
+            <div class="flex justify-content-end mt-2">
+                <Button
+                    label="Сохранить"
+                    @click="saveProjectStory"
+                ></Button>
+            </div>
+        </div>
     </div>
 </template>
 <script setup lang="ts">
 import api from '@/api/api';
-import { Delta } from 'quill/core';
-import Emitter from 'quill/core/emitter';
-import type Toolbar from 'quill/modules/toolbar';
-import { ref } from 'vue';
+import { useProjectEditingStore } from '@/stores/projectEditing';
+import { storeToRefs } from 'pinia';
+import Editor from '../ui/Editor.vue';
 
-function imageHandler(this: Toolbar) {
-    console.log(this);
+const projectEditingStore = useProjectEditingStore();
+const { projectData } = storeToRefs(projectEditingStore);
 
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', '.jpg,.png');
-    input.onchange = async () => {
-        const file = input.files?.[0];
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const { fileUrl } = await api.files.upload(formData);
-        const range = this.quill.getSelection();
-        if (!range) return; // TODO show error
-
-        // this.quill.insertEmbed(range.index, 'image', fileUrl);
-        // this.quill.emitter.emit(Emitter.sources.USER);
-        this.quill.updateContents(
-            new Delta().retain(range.index).delete(range.length).insert({ image: fileUrl }),
-            Emitter.sources.USER
-        );
+function saveProjectStory() {
+    const payload = {
+        projectId: projectData.value.id,
+        story: projectData.value.story,
     };
-    input.click();
+    api.project.updateStory(payload);
 }
-
-const value = ref();
 </script>
+<style scoped lang="scss">
+.title {
+    text-align: center;
+    width: 1000px;
+    margin: 0 auto;
+    h1 {
+        font-size: xx-large;
+    }
+    h2 {
+        font-size: large;
+        font-weight: normal;
+    }
+}
+.subtitle {
+    text-align: center;
+}
+</style>

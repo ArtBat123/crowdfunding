@@ -1,0 +1,9 @@
+:root {
+    --top-bar-menu-height: 50px;
+    --max-content-container-width: 1360px;
+}
+.content-container {
+    max-width: var(--max-content-container-width);
+    padding-inline: 60px;
+    margin-inline: auto;
+}

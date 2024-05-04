@@ -38,4 +38,7 @@ export class Project {
 
     @Column({ nullable: true })
     numberDays: number;
+
+    @Column({ nullable: true, type: 'text' })
+    story: string;
 }
