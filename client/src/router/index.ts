@@ -19,6 +19,11 @@ const router = createRouter({
                     component: () => import('@/pages/ProjectListPage.vue'),
                 },
                 {
+                    path: '/projects/:id',
+                    name: 'projectsCard',
+                    component: () => import('@/pages/ProjectPage.vue'),
+                },
+                {
                     path: '/projects/:id?/edit',
                     name: 'projectEditing',
                     redirect: { name: 'projectBaseInfoEditing' },
@@ -39,8 +44,7 @@ const router = createRouter({
                         {
                             path: 'about',
                             name: 'aboutProject',
-                            component: () =>
-                                import('@/components/projectEditing/AboutProject.vue'),
+                            component: () => import('@/components/projectEditing/AboutProject.vue'),
                         },
                     ],
                 },

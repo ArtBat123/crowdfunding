@@ -3,9 +3,10 @@
         <h3>Категории</h3>
         <div class="categories-tree">
             <Tree
-                v-model:selectionKeys="selectedCategories"
+                :selection-keys="selectedCategories"
                 :value="categories"
                 selection-mode="checkbox"
+                @update:selection-keys="onSelectItem"
             >
                 <template #togglericon="{ expanded }">
                     <span :class="['pi', expanded ? 'pi-angle-up' : 'pi-angle-down']"></span>
@@ -20,10 +21,44 @@ import { useDictionariesStore } from '@/stores/dictionaries/dictionaries';
 import { storeToRefs } from 'pinia';
 import { treeToPrimeTree } from '@/helpers/tree';
 import type { TreeNode } from 'primevue/treenode';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import type { TreeSelectionKeys } from 'primevue/tree';
+import { useProjectListStore } from '@/stores/projectList';
 
+const router = useRouter();
 const dictionariesStore = useDictionariesStore();
+const projectsStore = useProjectListStore();
 const { projectCategories } = storeToRefs(dictionariesStore);
+const { queryParams } = storeToRefs(projectsStore);
+// TODO
+const selectedCategories = computed(() => {
+    const result: TreeSelectionKeys = {};
+    if (queryParams.value.subcategoryId) {
+        projectCategories.value.forEach((category) => {
+            let selectedSubcategoryCount = 0;
+            category.subcategoryList.forEach((subcategory) => {
+                if (queryParams.value.subcategoryId?.includes(subcategory.id.toString())) {
+                    const key = category.id + '-' + subcategory.id;
+                    result[key] = { checked: true, partialChecked: false };
+                    selectedSubcategoryCount++;
+                }
+            });
+            const key = category.id.toString();
+            if (selectedSubcategoryCount > 0) {
+                const partialChecked = selectedSubcategoryCount !== category.subcategoryList.length;
+                result[key] = {
+                    checked: !partialChecked,
+                    partialChecked: partialChecked,
+                };
+            }
+        });
+    }
+    return result;
+});
+
+dictionariesStore.getProjectCategories();
+
 const categories = computed<TreeNode[]>(() =>
     treeToPrimeTree(projectCategories.value, {
         label: 'name',
@@ -31,14 +66,22 @@ const categories = computed<TreeNode[]>(() =>
         children: 'subcategoryList',
     })
 );
-dictionariesStore.getProjectCategories();
 
-const selectedCategories = ref({});
+function onSelectItem(value: TreeSelectionKeys) {
+    const keys = Object.keys(value);
+    const subcategoryIdList: string[] = [];
+    keys.forEach((item) => {
+        if (item.includes('-')) subcategoryIdList.push(item.split('-')[1]);
+    });
+    queryParams.value.subcategoryId = subcategoryIdList;
+    router.push({ query: queryParams.value });
+}
 </script>
 
 <style scoped lang="scss">
 .filter-container {
     min-width: 400px;
+    width: 1px;
 }
 :deep(.p-tree) {
     padding: 0;

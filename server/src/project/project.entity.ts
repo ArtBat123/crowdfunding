@@ -1,6 +1,12 @@
 import { ProjectCategory } from 'src/project-category/project-category.entity';
 import { ProjectSubcategory } from 'src/project-category/project-subcategory.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 
 enum ProjectDurationType {
     ExpirationDate = 'expiration_date',
@@ -18,11 +24,21 @@ export class Project {
     @Column()
     subtitle: string;
 
-    @ManyToOne(() => ProjectCategory, { nullable: false })
-    category: ProjectCategory;
+    @Column()
+    @ManyToOne(
+        () => ProjectCategory,
+        (category: ProjectCategory) => category.id,
+    )
+    @JoinColumn({ name: 'categoryId' })
+    categoryId: number;
 
-    @ManyToOne(() => ProjectSubcategory, { nullable: false })
-    subcategory: ProjectSubcategory;
+    @Column()
+    @ManyToOne(
+        () => ProjectSubcategory,
+        (subcategory: ProjectSubcategory) => subcategory.id,
+    )
+    @JoinColumn({ name: 'subcategoryId' })
+    subcategoryId: number;
 
     @Column()
     imageUrl: string;

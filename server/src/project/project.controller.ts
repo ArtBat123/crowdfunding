@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 
@@ -11,14 +11,14 @@ export class ProjectController {
         return this.projectService.create(dto);
     }
 
-    @Get()
-    getAll() {
-        return this.projectService.getAll();
-    }
-
     @Get(':id')
     get(@Param('id') id: number) {
         return this.projectService.get(id);
+    }
+
+    @Get()
+    getWithFilters(@Query() query) {
+        return this.projectService.getWithFilters(query);
     }
 
     @Put()

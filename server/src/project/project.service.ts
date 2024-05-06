@@ -12,11 +12,7 @@ export class ProjectService {
     ) {}
 
     async create(dto: CreateProjectDto) {
-        const project = this.projectRepository.create({
-            ...dto,
-            category: { id: dto.categoryId },
-            subcategory: { id: dto.subcategoryId },
-        });
+        const project = this.projectRepository.create(dto);
         return this.projectRepository.save(project);
     }
 
@@ -26,6 +22,23 @@ export class ProjectService {
 
     async get(id) {
         return this.projectRepository.findOneBy({ id });
+    }
+
+    async getWithFilters(query) {
+        let queryBuilder = this.projectRepository.createQueryBuilder('t');
+
+        if (query.subcategoryId)
+            queryBuilder = queryBuilder.where(
+                't.subcategoryId in (:...subcategoryId)',
+                { subcategoryId: query.subcategoryId },
+            );
+
+        if (query.search)
+            queryBuilder = queryBuilder.andWhere(`t.title like :title`, {
+                title: `%${query.search}%`,
+            });
+
+        return await queryBuilder.getMany();
     }
 
     async updateStory(dto) {

@@ -11,15 +11,11 @@
 </template>
 
 <script setup lang="ts">
-import api from '@/api/api';
-import { ref } from 'vue';
 import ProjectListItem from '@/components/projectList/ProjectListItem.vue';
+import { storeToRefs } from 'pinia';
+import { useProjectsStore } from '@/stores/projectList';
 
-const projectList = ref([]);
-
-const res = await api.project.getAll();
-
-projectList.value = res;
+const { projectList } = storeToRefs(useProjectsStore());
 </script>
 
 <style scoped>

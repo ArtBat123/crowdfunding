@@ -1,9 +1,11 @@
 <template>
-    <TopBar />
-    <div>
-        <router-view></router-view>
+    <div class="flex flex-column h-full">
+        <TopBar />
+        <div class="flex-grow-1">
+            <router-view></router-view>
+        </div>
+        <Footer />
     </div>
-    <Footer />
 </template>
 
 <script setup lang="ts">
