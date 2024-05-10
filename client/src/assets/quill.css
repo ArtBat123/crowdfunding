@@ -1,0 +1,11 @@
+.ql-editor {
+    flex-grow: 1;
+}
+.ql-container {
+    display: flex;
+    flex-direction: column;
+}
+.ql-video {
+    width: 100%;
+    height: 500px;
+}

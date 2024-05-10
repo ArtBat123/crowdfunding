@@ -9,7 +9,81 @@
         }"
         editor-style="min-height: 320px; height: 1px"
         @load="quillInit"
-    />
+    >
+        <template #toolbar>
+            <span class="ql-formats">
+                <select
+                    class="ql-header"
+                    defaultValue="0"
+                >
+                    <option value="1">Heading</option>
+                    <option value="2">Subheading</option>
+                    <option value="0">Normal</option>
+                </select>
+                <select class="ql-font">
+                    <option></option>
+                    <option value="serif"></option>
+                    <option value="monospace"></option>
+                </select>
+            </span>
+            <span class="ql-formats">
+                <button
+                    class="ql-bold"
+                    type="button"
+                ></button>
+                <button
+                    class="ql-italic"
+                    type="button"
+                ></button>
+                <button
+                    class="ql-underline"
+                    type="button"
+                ></button>
+            </span>
+            <span class="ql-formats">
+                <select class="ql-color ql-picker ql-color-picker"></select>
+                <select class="ql-background ql-picker ql-color-picker"></select>
+            </span>
+            <span class="ql-formats">
+                <button
+                    class="ql-list"
+                    value="ordered"
+                    type="button"
+                ></button>
+                <button
+                    class="ql-list"
+                    value="bullet"
+                    type="button"
+                ></button>
+                <select class="ql-align">
+                    <option defaultValue></option>
+                    <option value="center"></option>
+                    <option value="right"></option>
+                    <option value="justify"></option>
+                </select>
+            </span>
+            <span class="ql-formats">
+                <button
+                    class="ql-link"
+                    type="button"
+                ></button>
+                <button
+                    class="ql-image"
+                    type="button"
+                ></button>
+                <button
+                    class="ql-video"
+                    type="button"
+                ></button>
+            </span>
+            <span class="ql-formats">
+                <button
+                    class="ql-clean"
+                    type="button"
+                ></button>
+            </span>
+        </template>
+    </Editor>
 </template>
 
 <script setup lang="ts">
@@ -50,12 +124,3 @@ function imageHandler(this: Toolbar) {
     input.click();
 }
 </script>
-<style>
-.ql-editor {
-    flex-grow: 1;
-}
-.ql-container {
-    display: flex;
-    flex-direction: column;
-}
-</style>

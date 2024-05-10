@@ -1,7 +1,7 @@
 <template>
     <div class="project-card">
         <div class="project-card-image">
-            <Image
+            <img
                 :src="imageUrl || '/src/assets/image/project-image.jpg'"
                 alt="Image"
                 width="100%"
@@ -38,12 +38,13 @@ const { subtitle, title } = defineProps<Props>();
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
+    cursor: pointer;
 
     &-content {
         padding: 16px;
     }
     &-image {
-        height: 50%;
+        height: 200px;
     }
     &-title {
         font-size: large;
@@ -51,6 +52,12 @@ const { subtitle, title } = defineProps<Props>();
     }
     &-subtitle {
         font-size: small;
+    }
+    &:hover {
+        box-shadow:
+            0px 1px 10px rgba(0, 0, 0, 0.12),
+            0px 4px 5px rgba(0, 0, 0, 0.14),
+            0px 2px 4px -1px rgba(0, 0, 0, 0.2);
     }
 }
 .funding-progress {

@@ -29,4 +29,16 @@ interface Project {
     expirationDate?: Date;
     numberDays?: number;
     story?: string;
+    createdDate: string;
+    deadline: number;
+}
+
+interface ProjectReward {
+    id: number;
+    name: string;
+    price: number;
+    imageUrl: string;
+    limit: number;
+    projectId: number;
+    description: string;
 }

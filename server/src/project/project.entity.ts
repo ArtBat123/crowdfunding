@@ -1,7 +1,10 @@
 import { ProjectCategory } from 'src/project-category/project-category.entity';
 import { ProjectSubcategory } from 'src/project-category/project-subcategory.entity';
+import { dayCount } from 'src/utils';
 import {
+    AfterLoad,
     Column,
+    CreateDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -57,4 +60,19 @@ export class Project {
 
     @Column({ nullable: true, type: 'text' })
     story: string;
+
+    @CreateDateColumn({ name: 'created_date' })
+    createdDate: Date;
+
+    deadline: number;
+    @AfterLoad()
+    getDeadline() {
+        if (this.numberDays) {
+            const activeDays = dayCount(Date.now() - Number(this.createdDate));
+            this.deadline = Math.ceil(this.numberDays - activeDays);
+        } else {
+            const ms = Number(this.expirationDate) - Number(this.createdDate);
+            this.deadline = Math.ceil(dayCount(ms));
+        }
+    }
 }

@@ -1,21 +1,27 @@
 <template>
     <div class="projects-grid">
-        <ProjectListItem
+        <div
             v-for="project in projectList"
             :key="project.id"
-            :title="project.title"
-            :subtitle="project.subtitle"
-            :image-url="project.imageUrl"
-        />
+        >
+            <RouterLink :to="{ name: 'viewProjectStory', params: { id: project.id } }">
+                <ProjectListItem
+                    :title="project.title"
+                    :subtitle="project.subtitle"
+                    :image-url="project.imageUrl"
+                    class="h-full w-full"
+                />
+            </RouterLink>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import ProjectListItem from '@/components/projectList/ProjectListItem.vue';
 import { storeToRefs } from 'pinia';
-import { useProjectsStore } from '@/stores/projectList';
+import { useProjectListStore } from '@/stores/projectList';
 
-const { projectList } = storeToRefs(useProjectsStore());
+const { projectList } = storeToRefs(useProjectListStore());
 </script>
 
 <style scoped>

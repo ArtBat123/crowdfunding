@@ -9,6 +9,15 @@ const router = createRouter({
             component: AppLayout,
             children: [
                 {
+                    path: '/:pathMatch(.*)',
+                    redirect: { name: 'notFound' },
+                },
+                {
+                    path: '/not-found',
+                    name: 'notFound',
+                    component: () => import('@/pages/NotFoundPage.vue'),
+                },
+                {
                     path: '/',
                     name: 'home',
                     component: () => import('@/pages/HomeView.vue'),
@@ -22,6 +31,28 @@ const router = createRouter({
                     path: '/projects/:id',
                     name: 'projectsCard',
                     component: () => import('@/pages/ProjectPage.vue'),
+                    children: [
+                        {
+                            path: 'story',
+                            name: 'viewProjectStory',
+                            component: () => import('@/components/projectCard/ProjectStory.vue'),
+                        },
+                        {
+                            path: 'rewards',
+                            name: 'viewProjectRewards',
+                            component: () => import('@/components/projectCard/ProjectRewards.vue'),
+                        },
+                        {
+                            path: 'updates',
+                            name: 'viewProjectUpdates',
+                            component: () => import('@/components/projectCard/ProjectUpdates.vue'),
+                        },
+                        {
+                            path: 'comments',
+                            name: 'viewProjectComments',
+                            component: () => import('@/components/projectCard/ProjectComments.vue'),
+                        },
+                    ],
                 },
                 {
                     path: '/projects/:id?/edit',

@@ -1,5 +1,6 @@
 :root {
     --top-bar-menu-height: 50px;
+    --footer-height: 80px;
     --max-content-container-width: 1360px;
 }
 .content-container {

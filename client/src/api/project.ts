@@ -1,5 +1,4 @@
 import HttpClient from '@/helpers/HttpClient';
-import type { AxiosError, CanceledError } from 'axios';
 import axios from 'axios';
 
 const abortControllers: Record<string, AbortController> = {};

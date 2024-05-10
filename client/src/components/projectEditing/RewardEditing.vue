@@ -103,7 +103,4 @@ async function saveReward() {
 .form-panel {
     width: 60%;
 }
-.reward-image {
-    height: 250px;
-}
 </style>

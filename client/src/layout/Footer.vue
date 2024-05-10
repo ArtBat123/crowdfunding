@@ -12,7 +12,8 @@
 
 <style scoped lang="scss">
 .footer {
-    height: 80px;
+    height: var(--footer-height);
+    flex-shrink: 0;
     border-top: 1px solid var(--border-color);
 }
 .pi {
