@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useProjectEditingStore = defineStore('projectEditing', () => {
-    const rewardList = ref([]);
+    const rewardList = ref<any[]>([]);
     const projectData = ref();
 
     async function loadRewardListByProjectId(projectId: number) {

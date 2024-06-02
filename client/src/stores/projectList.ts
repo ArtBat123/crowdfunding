@@ -17,5 +17,20 @@ export const useProjectListStore = defineStore('projectList', () => {
         }
     }
 
-    return { projectList, queryParams, isLoadingProjects, loadProjectList };
+    async function loadProjectListByUserId(userId: number) {
+        try {
+            projectsRequestCount.value++;
+            projectList.value = await api.project.getByUserId(userId);
+        } finally {
+            projectsRequestCount.value--;
+        }
+    }
+
+    return {
+        projectList,
+        queryParams,
+        isLoadingProjects,
+        loadProjectList,
+        loadProjectListByUserId,
+    };
 });

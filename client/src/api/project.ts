@@ -4,8 +4,13 @@ import axios from 'axios';
 const abortControllers: Record<string, AbortController> = {};
 
 export default {
-    async get(id) {
+    async get(id: number) {
         const response = await HttpClient.get(`project/${id}`);
+        return response.data;
+    },
+
+    async getByUserId(userId: number) {
+        const response = await HttpClient.get(`project/user/${userId}`);
         return response.data;
     },
 
@@ -26,17 +31,17 @@ export default {
         }
     },
 
-    async create(payload) {
+    async create(payload: any) {
         const response = await HttpClient.post('project', payload);
         return response.data;
     },
 
-    async updateStory(payload) {
+    async updateStory(payload: any) {
         const response = await HttpClient.put('project', payload);
         return response.data;
     },
 
-    async updateCreatorEthAddress(payload) {
+    async updateCreatorEthAddress(payload: any) {
         const response = await HttpClient.put('project/creator-eth-address', payload);
         return response.data;
     },

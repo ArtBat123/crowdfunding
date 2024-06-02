@@ -197,7 +197,7 @@
 </template>
 
 <script setup lang="ts">
-import {  ref } from 'vue';
+import { ref } from 'vue';
 import Divider from '../ui/Divider.vue';
 import ImageUploader from '@/components/ui/ImageUploader.vue';
 import { useDictionariesStore } from '@/stores/dictionaries/dictionaries';
@@ -206,8 +206,11 @@ import api from '@/api/api';
 import { useRouter } from 'vue-router';
 import { useBlockchainStore } from '@/stores/blockchain';
 import { useProjectEditingStore } from '@/stores/projectEditing';
+import { useAuthStore } from '@/stores/auth';
+import { useLayoutStore } from '@/stores/layout';
 
 interface ProjectBasicData {
+    id?: number;
     title?: string;
     subtitle?: string;
     category?: ProjectCategory;
@@ -223,6 +226,8 @@ interface ProjectBasicData {
 const router = useRouter();
 const dictionariesStore = useDictionariesStore();
 const projectEditingStore = useProjectEditingStore();
+const { userInfo } = storeToRefs(useAuthStore());
+const { isLoading } = storeToRefs(useLayoutStore());
 const { projectCategories } = storeToRefs(dictionariesStore);
 const { projectData } = storeToRefs(projectEditingStore);
 const { getProjectCategories } = dictionariesStore;
@@ -236,6 +241,7 @@ await loadEthExchangeRate();
 if (projectData) {
     const projectDataCopy = { ...projectData.value };
     projectBasicData.value.title = projectDataCopy.title;
+    projectBasicData.value.id = projectDataCopy.id;
     projectBasicData.value.subtitle = projectDataCopy.subtitle;
     projectBasicData.value.category = projectCategories.value.find(
         (item) => item.id === projectDataCopy.categoryId
@@ -253,6 +259,7 @@ if (projectData) {
 
 async function saveProject() {
     const payload = {
+        id: projectBasicData.value.id,
         title: projectBasicData.value.title,
         subtitle: projectBasicData.value.subtitle,
         fundingGoal: projectBasicData.value.fundingGoal,
@@ -262,9 +269,15 @@ async function saveProject() {
         imageUrl: projectBasicData.value.imageUrl,
         categoryId: projectBasicData.value.category?.id,
         subcategoryId: projectBasicData.value.subcategory?.id,
+        userId: userInfo.value?.userId,
     };
-    const project = await api.project.create(payload);
-    router.replace({ params: { id: project.id } });
+    try {
+        isLoading.value = true;
+        const project = await api.project.create(payload);
+        router.replace({ params: { id: project.id } });
+    } finally {
+        isLoading.value = false;
+    }
 }
 async function uploadFile(file: File) {
     const formData = new FormData();

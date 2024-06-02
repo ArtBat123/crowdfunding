@@ -14,8 +14,7 @@ export class ProjectService {
     ) {}
 
     async create(dto: CreateProjectDto) {
-        const project = this.projectRepository.create(dto);
-        return this.projectRepository.save(project);
+        return this.projectRepository.save(dto);
     }
 
     async getAll() {
@@ -34,6 +33,20 @@ export class ProjectService {
             fundsRaised: fundsRaised.toString(),
             countContributions: Number(countContributions),
         };
+    }
+    async getByUserId(userId: number) {
+        const projectList = await this.projectRepository.findBy({ userId });
+        const projectIdList = projectList.map((item) => item.id);
+
+        const fundsRaisedList =
+            await this.smartContractService.getProjectsFundsRaised(
+                projectIdList,
+            );
+
+        return projectList.map((item, index) => ({
+            ...item,
+            fundsRaised: fundsRaisedList[index].toString(),
+        }));
     }
 
     async getWithFilters(query) {

@@ -1,5 +1,6 @@
 import { ProjectCategory } from 'src/project-category/project-category.entity';
 import { ProjectSubcategory } from 'src/project-category/project-subcategory.entity';
+import { User } from 'src/users/users.entity';
 import {
     AfterLoad,
     Column,
@@ -25,6 +26,11 @@ export class Project {
 
     @Column()
     subtitle: string;
+
+    @Column()
+    @ManyToOne(() => User, (user: User) => user.id)
+    @JoinColumn({ name: 'userId' })
+    userId: number;
 
     @Column()
     @ManyToOne(

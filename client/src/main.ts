@@ -11,12 +11,14 @@ import router from './router';
 import regPrimeVue from '@/vendor/primevue';
 import { useAppSettingsStore } from './stores/appSettings';
 
-const app = createApp(App);
+(async () => {
+    const app = createApp(App);
 
-app.use(createPinia());
-app.use(router);
-regPrimeVue(app);
+    app.use(createPinia());
+    app.use(router);
+    regPrimeVue(app);
 
-await useAppSettingsStore().loadContractAddress();
+    await useAppSettingsStore().loadContractAddress();
 
-app.mount('#app');
+    app.mount('#app');
+})();

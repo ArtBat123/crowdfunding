@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,5 +23,16 @@ export class UsersService {
     async getUserById(id: number) {
         const user = await this.userRepository.findOneBy({ id });
         return user;
+    }
+
+    async getUserInfoById(id) {
+        const user = await this.userRepository.findOneBy({ id });
+        if (!user) {
+            throw new HttpException(
+                'Пользователь не найден',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+        return { id: user.id, nickname: user.nickname };
     }
 }

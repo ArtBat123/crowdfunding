@@ -1,18 +1,12 @@
 <template>
     <Dialog
-        v-model:visible="isVisibleRegistration"
-        header="Регистрация"
+        v-model:visible="isVisibleLogin"
+        header="Вход"
         modal
         :style="{ width: '25rem' }"
         @hide="onHide"
     >
         <div>
-            <InputText
-                v-model="nickname"
-                placeholder="Никнейм"
-                autocomplete="given-name"
-                class="mb-3 w-full"
-            />
             <InputText
                 v-model="email"
                 placeholder="Email"
@@ -25,7 +19,7 @@
                 :feedback="false"
                 placeholder="Пароль"
                 input-class="w-full"
-                class="mb-3 w-full relative"
+                class="w-full relative"
             >
                 <template #hideicon="{ toggleCallback }">
                     <span
@@ -42,20 +36,17 @@
                 </template>
             </Password>
             <small
-                v-if="isRegistrationError"
+                v-if="isLoginError"
                 class="text-red-500"
             >
-                Неверные данные
+                Неверный логин/пароль
             </small>
             <Button
-                label="Создать аккаунт"
+                label="Войти"
                 type="submit"
                 class="w-full mt-4"
-                @click="onRegistration"
+                @click="onLogin"
             />
-        </div>
-        <div class="question-has-account">
-            <span>Уже есть аккаунт?</span><strong class="login">Войти</strong>
         </div>
     </Dialog>
 </template>
@@ -66,30 +57,28 @@ import { ref } from 'vue';
 import Button from '../ui/Button.vue';
 import { useAuthStore } from '@/stores/auth';
 
-const { registration } = useAuthStore();
 const layoutStore = useLayoutStore();
-const { isVisibleRegistration, isLoading } = storeToRefs(layoutStore);
+const { login } = useAuthStore();
+const { isVisibleLogin, isLoading } = storeToRefs(layoutStore);
 
-const nickname = ref('');
 const email = ref('');
 const password = ref('');
-const isRegistrationError = ref(false);
+const isLoginError = ref(false);
 
-async function onRegistration() {
+async function onLogin() {
     isLoading.value = true;
-    const response = await registration(email.value, password.value, nickname.value);
+    const response = await login(email.value, password.value);
     isLoading.value = false;
 
-    isRegistrationError.value = !response;
+    isLoginError.value = !response;
     if (response) {
-        isVisibleRegistration.value = false;
+        isVisibleLogin.value = false;
     }
 }
 function onHide() {
-    nickname.value = '';
     email.value = '';
     password.value = '';
-    isRegistrationError.value = false;
+    isLoginError.value = false;
 }
 </script>
 <style lang="scss" scoped>
@@ -99,18 +88,5 @@ function onHide() {
     right: 14px;
     top: calc(50% - 9px);
     color: var(--text-color-secondary);
-}
-.question-has-account {
-    font-size: small;
-    text-align: center;
-    margin-top: 8px;
-    .login {
-        color: var(--primary-color);
-        margin-left: 4px;
-        cursor: pointer;
-        &:hover {
-            text-decoration: underline;
-        }
-    }
 }
 </style>

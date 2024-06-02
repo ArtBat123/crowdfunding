@@ -3,6 +3,7 @@ import project from './project';
 import projectCategory from './projectCategory';
 import projectReward from './projectReward';
 import blockchain from './blockchain';
+import auth from './auth';
 
 export default {
     projectCategory,
@@ -10,4 +11,5 @@ export default {
     files,
     projectReward,
     blockchain,
+    auth,
 };

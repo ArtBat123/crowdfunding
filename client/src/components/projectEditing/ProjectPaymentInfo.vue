@@ -51,6 +51,7 @@
 <script setup lang="ts">
 import api from '@/api/api';
 import { useAppSettingsStore } from '@/stores/appSettings';
+import { useLayoutStore } from '@/stores/layout';
 import { useProjectEditingStore } from '@/stores/projectEditing';
 import { Contract, parseEther } from 'ethers';
 import { ethers } from 'ethers';
@@ -61,6 +62,7 @@ import { useRoute } from 'vue-router';
 const email = ref('');
 const walletAddress = ref();
 const route = useRoute();
+const { isLoading } = storeToRefs(useLayoutStore());
 const { workingEthereumNetwork, contractAddress } = useAppSettingsStore();
 const projectEditingStore = useProjectEditingStore();
 const { projectData } = storeToRefs(projectEditingStore);
@@ -93,7 +95,7 @@ async function completeProjectCreation() {
 
     // ABI контракта CrowdfundingPlatform
     const contractABI = [
-        'function createProject(uint projectId, uint goal, uint duration) external',
+        'function createProject(uint8 projectId, uint goal, uint duration) external',
     ];
 
     // Создаем экземпляр контракта
@@ -103,23 +105,24 @@ async function completeProjectCreation() {
         projectData.value.projectDurationType === 'number_days'
             ? projectData.value.numberDays * 24 * 60 * 60
             : (projectData.value.expirationDate - Date.now()) / 1000;
-    // Выполняем транзакцию
-    const tx = await crowdfundingContract.createProject(
-        projectData.value.id,
-        parseEther(projectData.value.fundingGoal.toString()),
-        duration
-    );
-    console.log('Transaction sent:', tx.hash);
-
-    // Ожидаем подтверждения транзакции
-    const receipt = await tx.wait();
-    console.log('Transaction confirmed:', receipt.transactionHash);
-
-    const creatorEthAddress = await signer.getAddress();
-    await api.project.updateCreatorEthAddress({
-        projectId: projectData.value.id,
-        creatorEthAddress,
-    });
+    try {
+        isLoading.value = true;
+        // Выполняем транзакцию
+        const tx = await crowdfundingContract.createProject(
+            projectData.value.id,
+            parseEther(projectData.value.fundingGoal.toString()),
+            duration
+        );
+        // Ожидаем подтверждения транзакции
+        await tx.wait();
+        const creatorEthAddress = await signer.getAddress();
+        await api.project.updateCreatorEthAddress({
+            projectId: projectData.value.id,
+            creatorEthAddress,
+        });
+    } finally {
+        isLoading.value = false;
+    }
 }
 </script>
 <style scoped>
