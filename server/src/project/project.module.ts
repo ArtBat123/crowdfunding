@@ -5,6 +5,7 @@ import { Project } from './project.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectCategory } from 'src/project-category/project-category.entity';
 import { ProjectSubcategory } from 'src/project-category/project-subcategory.entity';
+import { SmartContractModule } from 'src/smart-contract/smart-contract.module';
 
 @Module({
     controllers: [ProjectController],
@@ -15,6 +16,7 @@ import { ProjectSubcategory } from 'src/project-category/project-subcategory.ent
             ProjectCategory,
             ProjectSubcategory,
         ]),
+        SmartContractModule,
     ],
 })
 export class ProjectModule {}

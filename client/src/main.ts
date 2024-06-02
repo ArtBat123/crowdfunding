@@ -9,11 +9,14 @@ import '@/assets/main.css';
 import App from './App.vue';
 import router from './router';
 import regPrimeVue from '@/vendor/primevue';
+import { useAppSettingsStore } from './stores/appSettings';
 
 const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
 regPrimeVue(app);
+
+await useAppSettingsStore().loadContractAddress();
 
 app.mount('#app');

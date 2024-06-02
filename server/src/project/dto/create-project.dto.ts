@@ -8,4 +8,5 @@ export class CreateProjectDto {
     readonly projectDurationType: string;
     readonly expirationDate?: Date;
     readonly numberDays?: number;
+    readonly contractAddress: string;
 }

@@ -35,4 +35,9 @@ export default {
         const response = await HttpClient.put('project', payload);
         return response.data;
     },
+
+    async updateCreatorEthAddress(payload) {
+        const response = await HttpClient.put('project/creator-eth-address', payload);
+        return response.data;
+    },
 };

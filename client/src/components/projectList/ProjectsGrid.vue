@@ -6,9 +6,7 @@
         >
             <RouterLink :to="{ name: 'viewProjectStory', params: { id: project.id } }">
                 <ProjectListItem
-                    :title="project.title"
-                    :subtitle="project.subtitle"
-                    :image-url="project.imageUrl"
+                    :project="project"
                     class="h-full w-full"
                 />
             </RouterLink>

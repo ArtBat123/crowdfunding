@@ -77,7 +77,18 @@ const router = createRouter({
                             name: 'aboutProject',
                             component: () => import('@/components/projectEditing/AboutProject.vue'),
                         },
+                        {
+                            path: 'payment',
+                            name: 'payment',
+                            component: () =>
+                                import('@/components/projectEditing/ProjectPaymentInfo.vue'),
+                        },
                     ],
+                },
+                {
+                    path: '/projects/:id/reward-selecting',
+                    name: 'rewardSelecting',
+                    component: () => import('@/pages/RewardSelectingPage.vue'),
                 },
             ],
         },

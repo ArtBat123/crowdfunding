@@ -14,6 +14,7 @@ import {
     Ripple,
     Sidebar,
     StyleClass,
+    FocusTrap,
     ToastService,
     Toolbar,
     Tooltip,
@@ -59,7 +60,6 @@ import {
 export default function regPrimeVue(app: App) {
     app.use(PrimeVue, {
         ripple: true,
-        // locale: app.config.globalProperties.$tm('primeVue'),
     });
     app.use(ConfirmationService);
     app.use(DialogService);
@@ -68,6 +68,7 @@ export default function regPrimeVue(app: App) {
     app.directive('badge', BadgeDirective);
     app.directive('ripple', Ripple);
     app.directive('styleclass', StyleClass);
+    app.directive('focustrap', FocusTrap);
     app.component('Avatar', Avatar);
     app.component('Button', Button);
     app.component('Divider', Divider);

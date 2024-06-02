@@ -74,6 +74,7 @@
             <div class="right-section-block image-input">
                 <ImageUploader
                     id="image"
+                    :image-url="projectBasicData.imageUrl"
                     class="h-full"
                     @upload="uploadFile"
                 />
@@ -93,12 +94,20 @@
                 <div class="flex flex-column">
                     <label for="fundingGoal">Необходимая сумма</label>
                     <InputGroup>
-                        <InputGroupAddon>₽</InputGroupAddon>
+                        <InputGroupAddon><span class="pi pi-ethereum"></span></InputGroupAddon>
                         <InputNumber
                             v-model="projectBasicData.fundingGoal"
+                            :min-fraction-digits="0"
+                            :max-fraction-digits="10"
                             input-id="fundingGoal"
                         />
                     </InputGroup>
+                    <small
+                        v-if="projectBasicData.fundingGoal"
+                        class="text-gray-500"
+                    >
+                        ≈ {{ ethToRubles(projectBasicData.fundingGoal) }}₽
+                    </small>
                 </div>
             </div>
         </section>
@@ -118,7 +127,7 @@
                             v-model="projectBasicData.projectDurationType"
                             input-id="numberDays"
                             name="projectDurationType"
-                            :value="ProjectDurationType.NumberDays"
+                            :value="'number_days'"
                         />
                         <label
                             for="numberDays"
@@ -128,9 +137,7 @@
                         </label>
                     </div>
                     <div
-                        v-if="
-                            projectBasicData.projectDurationType === ProjectDurationType.NumberDays
-                        "
+                        v-if="projectBasicData.projectDurationType === 'number_days'"
                         class="project-duration-input-panel"
                     >
                         <label for="numberDays"> Введите количество дней</label>
@@ -146,7 +153,7 @@
                             v-model="projectBasicData.projectDurationType"
                             input-id="expirationDate"
                             name="projectDurationType"
-                            :value="ProjectDurationType.ExpirationDate"
+                            :value="'expiration_date'"
                         />
                         <label
                             for="expirationDate"
@@ -156,10 +163,7 @@
                         </label>
                     </div>
                     <div
-                        v-if="
-                            projectBasicData.projectDurationType ===
-                            ProjectDurationType.ExpirationDate
-                        "
+                        v-if="projectBasicData.projectDurationType === 'expiration_date'"
                         class="project-duration-input-panel"
                     >
                         <label for="date">Дата окончания проекта</label>
@@ -193,18 +197,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import {  ref } from 'vue';
 import Divider from '../ui/Divider.vue';
 import ImageUploader from '@/components/ui/ImageUploader.vue';
 import { useDictionariesStore } from '@/stores/dictionaries/dictionaries';
 import { storeToRefs } from 'pinia';
 import api from '@/api/api';
 import { useRouter } from 'vue-router';
+import { useBlockchainStore } from '@/stores/blockchain';
+import { useProjectEditingStore } from '@/stores/projectEditing';
 
-enum ProjectDurationType {
-    ExpirationDate = 'expiration_date',
-    NumberDays = 'number_days',
-}
 interface ProjectBasicData {
     title?: string;
     subtitle?: string;
@@ -220,12 +222,34 @@ interface ProjectBasicData {
 
 const router = useRouter();
 const dictionariesStore = useDictionariesStore();
+const projectEditingStore = useProjectEditingStore();
 const { projectCategories } = storeToRefs(dictionariesStore);
+const { projectData } = storeToRefs(projectEditingStore);
 const { getProjectCategories } = dictionariesStore;
 
-const projectBasicData = ref<ProjectBasicData>({});
+const { loadEthExchangeRate, ethToRubles } = useBlockchainStore();
 
-getProjectCategories();
+const projectBasicData = ref<ProjectBasicData>({});
+await getProjectCategories();
+await loadEthExchangeRate();
+
+if (projectData) {
+    const projectDataCopy = { ...projectData.value };
+    projectBasicData.value.title = projectDataCopy.title;
+    projectBasicData.value.subtitle = projectDataCopy.subtitle;
+    projectBasicData.value.category = projectCategories.value.find(
+        (item) => item.id === projectDataCopy.categoryId
+    );
+    projectBasicData.value.subcategory = projectBasicData.value.category?.subcategoryList.find(
+        (item) => item.id === projectDataCopy.subcategoryId
+    );
+    projectBasicData.value.expirationDate = projectDataCopy.expirationDate;
+    projectBasicData.value.expirationTime = projectDataCopy.expirationDate;
+    projectBasicData.value.fundingGoal = projectDataCopy.fundingGoal;
+    projectBasicData.value.imageUrl = projectDataCopy.imageUrl;
+    projectBasicData.value.numberDays = projectDataCopy.numberDays;
+    projectBasicData.value.projectDurationType = projectDataCopy.projectDurationType;
+}
 
 async function saveProject() {
     const payload = {

@@ -25,4 +25,9 @@ export class ProjectController {
     updateStory(@Body() dto) {
         return this.projectService.updateStory(dto);
     }
+
+    @Put('creator-eth-address')
+    updateCreatorEthAddress(@Body() dto) {
+        return this.projectService.updateCreatorEthAddress(dto);
+    }
 }

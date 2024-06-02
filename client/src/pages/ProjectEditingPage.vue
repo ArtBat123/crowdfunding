@@ -2,7 +2,6 @@
     <TabMenu
         :active-index="activeTabIndex"
         :model="tabItems"
-        style="height: 51px"
         @tab-change="onTabChange"
     />
     <RouterView />
@@ -18,9 +17,10 @@ const route = useRoute();
 const { loadProjectById } = useProjectEditingStore();
 await loadProjectById(Number(route.params.id));
 const tabItems = [
-    { label: 'Основное', icon: 'pi pi-home', routeName: 'projectBaseInfoEditing' },
-    { label: 'Награды', icon: 'pi pi-home', routeName: 'projectRewards' },
-    { label: 'О проекте', icon: 'pi pi-home', routeName: 'aboutProject' },
+    { label: 'Основное', icon: 'pi pi-pen-to-square', routeName: 'projectBaseInfoEditing' },
+    { label: 'Награды', icon: 'pi pi-gift', routeName: 'projectRewards' },
+    { label: 'О проекте', icon: 'pi pi-book', routeName: 'aboutProject' },
+    { label: 'Оплата', icon: 'pi pi-wallet', routeName: 'payment' },
 ];
 const activeTabIndex = computed(() => {
     return tabItems.findIndex((item) => item.routeName === route.name);
@@ -32,20 +32,12 @@ function onTabChange(event: TabMenuChangeEvent) {
 }
 </script>
 <style scoped lang="scss">
-.container {
-    max-width: var(--max-content-width);
-    margin: 0 auto;
-}
-.navigation {
-    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.17);
-    background-color: var(--surface-overlay);
-
-    &-menu {
-        max-width: var(--max-content-width);
-        margin: 0 auto;
+@layer {
+    .p-tabmenu {
+        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.17);
+        overflow-x: visible;
     }
 }
-
 :deep(.p-tabmenu-nav) {
     display: flex;
     border: none;
@@ -55,9 +47,14 @@ function onTabChange(event: TabMenuChangeEvent) {
     }
     .p-menuitem-link {
         border: none;
+        display: flex;
+        justify-content: center;
     }
     .p-tabmenu-ink-bar {
         height: 3px;
+    }
+    .p-menuitem-icon {
+        margin-right: 8px;
     }
 }
 </style>

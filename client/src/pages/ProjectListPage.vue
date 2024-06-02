@@ -27,6 +27,7 @@
 import ProjectsFilterPanel from '@/components/projectList/ProjectsFilterPanel.vue';
 import ProjectsGrid from '@/components/projectList/ProjectsGrid.vue';
 import Loader from '@/components/ui/Loader.vue';
+import { useBlockchainStore } from '@/stores/blockchain';
 import { debounce } from '@/helpers/common';
 import { useProjectListStore } from '@/stores/projectList';
 import { storeToRefs } from 'pinia';
@@ -42,6 +43,9 @@ const router = useRouter();
 const route = useRoute();
 const projectsStore = useProjectListStore();
 const { isLoadingProjects, queryParams } = storeToRefs(projectsStore);
+const { loadEthExchangeRate } = useBlockchainStore();
+await loadEthExchangeRate();
+
 const changeRouteQuery = debounce(
     (queryParams: ProjectQueryParams) => router.push({ query: queryParams as LocationQueryRaw }),
     300

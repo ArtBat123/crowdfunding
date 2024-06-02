@@ -10,12 +10,12 @@
             @change="onImgSelect"
         />
         <div
-            v-show="selectedImg"
+            v-show="selectedImg || imageUrl"
             class="selected-image-card"
         >
             <img
                 ref="selectedImgEl"
-                alt="d"
+                alt="image"
                 class="selected-image"
             />
             <div class="buttons-bar">
@@ -33,7 +33,7 @@
             </div>
         </div>
         <div
-            v-if="!selectedImg"
+            v-if="!(selectedImg || imageUrl)"
             class="image-uploader-container"
             tabindex="0"
             @click.self="onClickOfContainer"
@@ -47,11 +47,13 @@
     </div>
 </template>
 <script setup lang="ts">
+// TODO
 import AddImageIcon from '@/components/icons/AddImageIcon.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 interface Props {
     id: string;
+    imageUrl?: string;
 }
 
 const props = defineProps<Props>();
@@ -81,6 +83,10 @@ function callFileInput() {
 function clear() {
     selectedImg.value = null;
 }
+
+onMounted(() => {
+    if (props.imageUrl && selectedImgEl.value) selectedImgEl.value.src = props.imageUrl;
+});
 </script>
 
 <style scoped lang="scss">

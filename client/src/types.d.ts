@@ -30,7 +30,12 @@ interface Project {
     numberDays?: number;
     story?: string;
     createdDate: string;
-    deadline: number;
+    deadline: string;
+    fundsRaised: string;
+}
+
+interface ProjectCard extends Project {
+    countContributions: number;
 }
 
 interface ProjectReward {
@@ -41,4 +46,8 @@ interface ProjectReward {
     limit: number;
     projectId: number;
     description: string;
+}
+enum ProjectDurationType {
+    ExpirationDate = 'expiration_date',
+    NumberDays = 'number_days',
 }

@@ -69,7 +69,7 @@ const authStore = useAuthStore();
 const { isVisibleRegistration, isVisibleLogin } = storeToRefs(layoutStore);
 const { user } = storeToRefs(authStore);
 
-const logoSrc = new URL('@/assets/svg/logo.svg', import.meta.url);
+const logoSrc = new URL('@/assets/svg/logo.png', import.meta.url);
 
 function onRegistrationClick() {
     isVisibleRegistration.value = true;

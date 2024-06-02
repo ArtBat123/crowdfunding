@@ -16,11 +16,7 @@
             />
         </div>
         <RewardList v-if="rewardList.length" />
-        <Dialog v-model:visible="visibleEditDialog">
-            <template #default>
-                <RewardEditing />
-            </template>
-        </Dialog>
+        <RewardEditingDialog v-model:visible="visibleEditDialog" />
     </div>
 </template>
 <script setup lang="ts">
@@ -28,8 +24,8 @@ import RewardList from '@/components/projectEditing/RewardList.vue';
 import { useProjectEditingStore } from '@/stores/projectEditing';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
-import RewardEditing from './RewardEditing.vue';
 import { useRoute } from 'vue-router';
+import RewardEditingDialog from './RewardEditingDialog.vue';
 
 const projectEditingStore = useProjectEditingStore();
 const { rewardList } = storeToRefs(projectEditingStore);

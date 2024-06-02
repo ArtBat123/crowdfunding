@@ -2,33 +2,57 @@
     <div class="project-card">
         <div class="project-card-image">
             <img
-                :src="imageUrl || '/src/assets/image/project-image.jpg'"
+                :src="project.imageUrl || '/src/assets/image/project-image.jpg'"
                 alt="Image"
                 width="100%"
                 height="100%"
             />
         </div>
         <div class="project-card-content">
-            <div class="project-card-title">{{ title }}</div>
-            <div class="project-card-subtitle">{{ subtitle }}</div>
+            <div class="project-card-title">{{ project.title }}</div>
+            <div class="project-card-subtitle">{{ project.subtitle }}</div>
             <div class="funding-progress">
-                <div class="flex justify-content-between">
-                    <div><span>Собрано:</span> <span class="font-semibold">₽22100</span></div>
-                    <div><span class="pi pi-clock text-xs mr-1"></span>15 дней до конца</div>
+                <div class="flex justify-content-between mb-2">
+                    <div>
+                        <span>Собрано: </span>
+                        <span class="font-semibold"> {{ fundsRaised }}ETH </span>
+                        <small class="text-gray-500">
+                            ≈ {{ ethToRubles(Number(fundsRaised)) }}₽
+                        </small>
+                    </div>
+                    <div>
+                        <span class="pi pi-clock text-xs mr-1"></span>
+                        <span>{{ deadlineDayCount }} дней до конца</span>
+                    </div>
                 </div>
-                <ProgressBar :value="50"></ProgressBar>
+                <ProgressBar :value="progressBarValue"></ProgressBar>
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
+import { useBlockchainStore } from '@/stores/blockchain';
+import { formatEther } from 'ethers';
+import { computed } from 'vue';
+
 interface Props {
-    title: string;
-    subtitle: string;
-    imageUrl: string;
+    project: Project;
 }
 
-const { subtitle, title } = defineProps<Props>();
+const props = defineProps<Props>();
+const { ethToRubles } = useBlockchainStore();
+
+const deadlineDayCount = computed(() => {
+    const deadlineDate = new Date(props.project.deadline);
+    const result = (Number(deadlineDate) - Date.now()) / 1000 / 60 / 60 / 24;
+    return Math.floor(result);
+});
+
+const fundsRaised = computed(() => formatEther(BigInt(props.project.fundsRaised)));
+const progressBarValue = computed(() => {
+    const percents = (Number(fundsRaised.value) / props.project.fundingGoal) * 100;
+    return Math.round(percents);
+});
 </script>
 
 <style scoped lang="scss">
@@ -42,6 +66,9 @@ const { subtitle, title } = defineProps<Props>();
 
     &-content {
         padding: 16px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
     }
     &-image {
         height: 200px;
@@ -61,7 +88,7 @@ const { subtitle, title } = defineProps<Props>();
     }
 }
 .funding-progress {
-    margin: 10px 0;
+    margin: auto 0 10px 0;
 }
 :deep(.p-progressbar) {
     height: 15px;

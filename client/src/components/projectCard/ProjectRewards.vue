@@ -12,38 +12,17 @@
                         <div class="line-height-1 font-bold text-gray-700 mb-1">
                             {{ reward.name }}
                         </div>
-                        <div class="reward-price">{{ currencyFormat(reward.price) }}₽</div>
+                        <div class="reward-price">{{ currencyFormat(reward.price) }} ETH</div>
                     </a>
                 </li>
             </ul>
         </nav>
         <div class="right-panel">
-            <div
+            <RewardCard
                 v-for="reward in rewardList"
-                :id="reward.id.toString()"
                 :key="reward.id"
-                class="reward-card"
-            >
-                <img
-                    :src="reward.imageUrl"
-                    alt="image"
-                    height="250px"
-                    width="100%"
-                />
-                <div class="p-3">
-                    <div class="flex justify-content-between">
-                        <div class="text-2xl font-semibold">{{ reward.name }}</div>
-                        <div class="text-2xl">{{ currencyFormat(reward.price) }}₽</div>
-                    </div>
-                    <div class="text-gray-600">{{ reward.description }}</div>
-                    <div class="flex justify-content-end">
-                        <Button
-                            label="Оплатить"
-                            class="w-15rem mt-3"
-                        />
-                    </div>
-                </div>
-            </div>
+                :reward="reward"
+            />
         </div>
     </div>
 </template>
@@ -53,6 +32,7 @@ import { useProjectStore } from '@/stores/project';
 import { storeToRefs } from 'pinia';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import RewardCard from './RewardCard.vue';
 
 const projectStore = useProjectStore();
 const { currencyFormat } = useFormatter();
@@ -104,11 +84,5 @@ onUnmounted(() => observer.disconnect());
     font-size: 20px;
     line-height: 100%;
     color: var(--gray-700);
-}
-.reward-card {
-    border: 1px solid var(--border-color);
-    width: 100%;
-    margin-bottom: 50px;
-    scroll-margin-block-start: 100px;
 }
 </style>
