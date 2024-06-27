@@ -1,5 +1,13 @@
 <template>
     <div class="filter-container">
+        <div class="flex items-center">
+            <Checkbox
+                v-model="visibleFinishedProject"
+                :binary="true"
+                class="mr-2 mb-4"
+            />
+            <h3>Показывать закрытые проекты</h3>
+        </div>
         <h3>Категории</h3>
         <div class="categories-tree">
             <Tree
@@ -21,16 +29,18 @@ import { useDictionariesStore } from '@/stores/dictionaries/dictionaries';
 import { storeToRefs } from 'pinia';
 import { treeToPrimeTree } from '@/helpers/tree';
 import type { TreeNode } from 'primevue/treenode';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { TreeSelectionKeys } from 'primevue/tree';
 import { useProjectListStore } from '@/stores/projectList';
+import Checkbox from 'primevue/checkbox';
 
 const router = useRouter();
 const dictionariesStore = useDictionariesStore();
 const projectsStore = useProjectListStore();
 const { projectCategories } = storeToRefs(dictionariesStore);
 const { queryParams } = storeToRefs(projectsStore);
+const visibleFinishedProject = ref(false);
 // TODO
 const selectedCategories = computed(() => {
     const result: TreeSelectionKeys = {};
