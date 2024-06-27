@@ -4,14 +4,29 @@
             v-if="!isLoadingProjects"
             class="projects-grid"
         >
+            <template v-if="projectList.length > 0">
+                <div
+                    v-for="project in projectList"
+                    :key="project.id"
+                >
+                    <RouterLink :to="{ name: 'projectEditing', params: { id: project.id } }">
+                        <ProjectListItem
+                            :project="project"
+                            class="h-full w-full"
+                        />
+                    </RouterLink>
+                </div>
+            </template>
             <div
-                v-for="project in projectList"
-                :key="project.id"
+                v-else
+                class="flex align-items-center"
             >
-                <RouterLink :to="{ name: 'projectEditing', params: { id: project.id } }">
-                    <ProjectListItem
-                        :project="project"
-                        class="h-full w-full"
+                <span class="text-3xl mr-4">Проектов нет, но вы можете создать их</span>
+                <RouterLink to="/projects/edit/base">
+                    <Button
+                        label="Создать проект"
+                        outlined
+                        class="mr-4"
                     />
                 </RouterLink>
             </div>
