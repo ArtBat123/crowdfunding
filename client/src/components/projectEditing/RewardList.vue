@@ -30,17 +30,24 @@
                 <Button
                     label="Удалить"
                     link
+                    @click="deleteReward(reward.id)"
                 />
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
+import api from '@/api/api';
 import { useProjectEditingStore } from '@/stores/projectEditing';
 import { storeToRefs } from 'pinia';
 
 const projectEditingStore = useProjectEditingStore();
-const { rewardList } = storeToRefs(projectEditingStore);
+const { rewardList, projectData } = storeToRefs(projectEditingStore);
+
+async function deleteReward(rewardId: number) {
+    await api.projectReward.delete(rewardId);
+    projectEditingStore.loadRewardListByProjectId(projectData.value.id);
+}
 </script>
 <style scoped lang="scss">
 .rewards-grid {

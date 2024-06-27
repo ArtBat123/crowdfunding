@@ -9,4 +9,8 @@ export default {
         const response = await HttpClient.post('project-rewards', payload);
         return response.data;
     },
+    async delete(projectId: number) {
+        const response = await HttpClient.delete('project-rewards/' + projectId);
+        return response.data;
+    },
 };

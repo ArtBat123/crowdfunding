@@ -19,4 +19,9 @@ export class ProjectRewardsService {
         const projectReward = this.projectRewardsRepository.create(dto);
         return this.projectRewardsRepository.save(projectReward);
     }
+
+    async delete(rewardId: number) {
+        await this.projectRewardsRepository.delete({ id: rewardId });
+        return rewardId;
+    }
 }
