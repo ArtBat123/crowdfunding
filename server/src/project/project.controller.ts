@@ -1,11 +1,13 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('project')
 export class ProjectController {
     constructor(private projectService: ProjectService) {}
 
+    @UseGuards(AuthGuard)
     @Post()
     create(@Body() dto: CreateProjectDto) {
         return this.projectService.create(dto);
@@ -26,11 +28,13 @@ export class ProjectController {
         return this.projectService.getWithFilters(query);
     }
 
+    @UseGuards(AuthGuard)
     @Put()
     updateStory(@Body() dto) {
         return this.projectService.updateStory(dto);
     }
 
+    @UseGuards(AuthGuard)
     @Put('creator-eth-address')
     updateCreatorEthAddress(@Body() dto) {
         return this.projectService.updateCreatorEthAddress(dto);

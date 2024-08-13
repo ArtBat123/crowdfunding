@@ -6,9 +6,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-    constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
-    ) {}
+    constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
     async createUser(dto: CreateUserDto) {
         const user = this.userRepository.create(dto);
@@ -28,10 +26,7 @@ export class UsersService {
     async getUserInfoById(id) {
         const user = await this.userRepository.findOneBy({ id });
         if (!user) {
-            throw new HttpException(
-                'Пользователь не найден',
-                HttpStatus.BAD_REQUEST,
-            );
+            throw new HttpException('Пользователь не найден', HttpStatus.BAD_REQUEST);
         }
         return { id: user.id, nickname: user.nickname };
     }

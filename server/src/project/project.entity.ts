@@ -33,18 +33,12 @@ export class Project {
     userId: number;
 
     @Column()
-    @ManyToOne(
-        () => ProjectCategory,
-        (category: ProjectCategory) => category.id,
-    )
+    @ManyToOne(() => ProjectCategory, (category: ProjectCategory) => category.id)
     @JoinColumn({ name: 'categoryId' })
     categoryId: number;
 
     @Column()
-    @ManyToOne(
-        () => ProjectSubcategory,
-        (subcategory: ProjectSubcategory) => subcategory.id,
-    )
+    @ManyToOne(() => ProjectSubcategory, (subcategory: ProjectSubcategory) => subcategory.id)
     @JoinColumn({ name: 'subcategoryId' })
     subcategoryId: number;
 
@@ -79,8 +73,7 @@ export class Project {
             this.deadline = new Date(this.expirationDate);
         } else {
             this.deadline = new Date(
-                Number(this.createdDate) +
-                    this.numberDays * 24 * 60 * 60 * 1000,
+                Number(this.createdDate) + this.numberDays * 24 * 60 * 60 * 1000,
             );
         }
     }
