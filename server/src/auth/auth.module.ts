@@ -4,6 +4,8 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RefreshSession } from './refresh-session.entity';
 
 @Module({
     providers: [AuthService],
@@ -11,10 +13,8 @@ import { ConfigModule } from '@nestjs/config';
     imports: [
         ConfigModule.forRoot({ envFilePath: '.env' }),
         UsersModule,
-        JwtModule.register({
-            secret: process.env.PRIVATE_KEY,
-            signOptions: { expiresIn: '24h' },
-        }),
+        JwtModule,
+        TypeOrmModule.forFeature([RefreshSession]),
     ],
     exports: [AuthService, JwtModule],
 })

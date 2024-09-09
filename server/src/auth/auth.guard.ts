@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
         if (!token) throw new UnauthorizedException({ message: 'Пользователь не авторизован' });
 
         try {
-            const user = this.jwtService.verify(token, { secret: process.env.PRIVATE_KEY });
+            const user = this.jwtService.verify(token, { secret: process.env.JWT_ACCESS_SECRET });
             request.user = user;
             return true;
         } catch (e) {

@@ -1,16 +1,16 @@
 <template>
     <Dialog
-        v-model:visible="isVisibleRegistration"
+        v-model:visible="isVisibleRegistrationDialog"
         header="Регистрация"
         modal
         :style="{ width: '25rem' }"
-        @hide="onHide"
+        @hide="clearForm"
     >
-        <div>
+        <form>
             <InputText
                 v-model="nickname"
                 placeholder="Никнейм"
-                autocomplete="given-name"
+                autocomplete="nickname"
                 class="mb-3 w-full"
             />
             <InputText
@@ -42,20 +42,27 @@
                 </template>
             </Password>
             <small
-                v-if="isRegistrationError"
+                v-if="errorMessage"
                 class="text-red-500"
             >
-                Неверные данные
+                {{ errorMessage }}
             </small>
             <Button
                 label="Создать аккаунт"
                 type="submit"
                 class="w-full mt-4"
-                @click="onRegistration"
+                :loading="isLoading"
+                @click.prevent="onRegistration"
             />
-        </div>
+        </form>
         <div class="question-has-account">
-            <span>Уже есть аккаунт?</span><strong class="login">Войти</strong>
+            <span>Уже есть аккаунт?</span>
+            <strong
+                class="login"
+                @click="openLoginDialog"
+            >
+                Войти
+            </strong>
         </div>
     </Dialog>
 </template>
@@ -63,33 +70,42 @@
 import { useLayoutStore } from '@/stores/layout';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
-import Button from '../ui/Button.vue';
 import { useAuthStore } from '@/stores/auth';
+import { useAsyncData } from '@/composable/useAsyncData';
+import { isObject } from '@/helpers/typesHelper';
 
 const { registration } = useAuthStore();
 const layoutStore = useLayoutStore();
-const { isVisibleRegistration, isLoading } = storeToRefs(layoutStore);
+const { isVisibleRegistrationDialog, isVisibleLoginDialog } = storeToRefs(layoutStore);
 
 const nickname = ref('');
 const email = ref('');
 const password = ref('');
-const isRegistrationError = ref(false);
+const errorMessage = ref<string | null>(null);
+const isLoading = ref(false);
 
 async function onRegistration() {
-    isLoading.value = true;
-    const response = await registration(email.value, password.value, nickname.value);
-    isLoading.value = false;
+    const { error } = await useAsyncData({
+        queryFn: () => registration(email.value, password.value, nickname.value),
+        setIsLoading: (newValue) => (isLoading.value = newValue),
+    });
 
-    isRegistrationError.value = !response;
-    if (response) {
-        isVisibleRegistration.value = false;
+    if (error.value && isObject(error.value) && 'message' in error.value) {
+        errorMessage.value = error.value.message as string;
+    } else if (!error.value) {
+        clearForm();
+        isVisibleRegistrationDialog.value = false;
     }
 }
-function onHide() {
+function openLoginDialog() {
+    isVisibleRegistrationDialog.value = false;
+    isVisibleLoginDialog.value = true;
+}
+function clearForm() {
     nickname.value = '';
     email.value = '';
     password.value = '';
-    isRegistrationError.value = false;
+    errorMessage.value = null;
 }
 </script>
 <style lang="scss" scoped>

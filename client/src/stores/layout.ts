@@ -2,9 +2,9 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useLayoutStore = defineStore('layout', () => {
-    const isVisibleRegistration = ref(false);
-    const isVisibleLogin = ref(false);
+    const isVisibleRegistrationDialog = ref(false);
+    const isVisibleLoginDialog = ref(false);
     const isLoading = ref(false);
 
-    return { isVisibleRegistration, isVisibleLogin, isLoading };
+    return { isVisibleRegistrationDialog, isVisibleLoginDialog, isLoading };
 });

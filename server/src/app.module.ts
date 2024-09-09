@@ -9,7 +9,6 @@ import { FilesModule } from './files/files.module';
 import { ProjectRewardsModule } from './project-rewards/project-rewards.module';
 import { BlockchainModule } from './blockchain/blockchain.module';
 import { SmartContractModule } from './smart-contract/smart-contract.module';
-console.log('POSTGRES_PORT' + process.env.PRIVATE_KEY);
 @Module({
     imports: [
         ConfigModule.forRoot({ envFilePath: '.env' }),

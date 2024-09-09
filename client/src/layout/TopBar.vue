@@ -22,7 +22,7 @@
             <div class="right py-2">
                 <Divider layout="vertical" />
                 <div
-                    v-if="userInfo"
+                    v-if="isAuth && userInfo"
                     class="flex align-items-center h-full"
                 >
                     <RouterLink to="/projects/edit/base">
@@ -39,8 +39,7 @@
                             class="mr-4"
                         />
                     </RouterLink>
-                    <span class="text-3xl">{{ userInfo.nickname }}</span>
-                    <span class="pi pi-user user-icon ml-2"></span>
+                    <UserProfilePanel></UserProfilePanel>
                 </div>
                 <div
                     v-else
@@ -73,19 +72,20 @@ import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
 import { RouterLink } from 'vue-router';
 import LoginDialog from '@/components/auth/LoginDialog.vue';
+import UserProfilePanel from './UserProfilePanel.vue';
 
 const layoutStore = useLayoutStore();
 const authStore = useAuthStore();
-const { isVisibleRegistration, isVisibleLogin } = storeToRefs(layoutStore);
-const { userInfo } = storeToRefs(authStore);
+const { isVisibleRegistrationDialog, isVisibleLoginDialog } = storeToRefs(layoutStore);
+const { userInfo, isAuth } = storeToRefs(authStore);
 
 const logoSrc = new URL('@/assets/svg/logo.png', import.meta.url);
 
 function onRegistrationClick() {
-    isVisibleRegistration.value = true;
+    isVisibleRegistrationDialog.value = true;
 }
 function onLoginClick() {
-    isVisibleLogin.value = true;
+    isVisibleLoginDialog.value = true;
 }
 </script>
 

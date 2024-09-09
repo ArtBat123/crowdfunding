@@ -1,12 +1,12 @@
 <template>
     <Dialog
-        v-model:visible="isVisibleLogin"
+        v-model:visible="isVisibleLoginDialog"
         header="Вход"
         modal
         :style="{ width: '25rem' }"
-        @hide="onHide"
+        @hide="clearForm"
     >
-        <div>
+        <form>
             <InputText
                 v-model="email"
                 placeholder="Email"
@@ -36,49 +36,55 @@
                 </template>
             </Password>
             <small
-                v-if="isLoginError"
+                v-if="errorMessage"
                 class="text-red-500"
             >
-                Неверный логин/пароль
+                {{ errorMessage }}
             </small>
             <Button
                 label="Войти"
                 type="submit"
                 class="w-full mt-4"
-                @click="onLogin"
+                :loading="isLoading"
+                @click.prevent="onLogin"
             />
-        </div>
+        </form>
     </Dialog>
 </template>
 <script setup lang="ts">
 import { useLayoutStore } from '@/stores/layout';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
-import Button from '../ui/Button.vue';
 import { useAuthStore } from '@/stores/auth';
+import { useAsyncData } from '@/composable/useAsyncData';
+import { isObject } from '@/helpers/typesHelper';
 
 const layoutStore = useLayoutStore();
 const { login } = useAuthStore();
-const { isVisibleLogin, isLoading } = storeToRefs(layoutStore);
+const { isVisibleLoginDialog } = storeToRefs(layoutStore);
 
 const email = ref('');
 const password = ref('');
-const isLoginError = ref(false);
+const isLoading = ref(false);
+const errorMessage = ref<string | null>(null);
 
 async function onLogin() {
-    isLoading.value = true;
-    const response = await login(email.value, password.value);
-    isLoading.value = false;
+    const { error } = await useAsyncData({
+        queryFn: () => login(email.value, password.value),
+        setIsLoading: (newValue) => (isLoading.value = newValue),
+    });
 
-    isLoginError.value = !response;
-    if (response) {
-        isVisibleLogin.value = false;
+    if (error.value && isObject(error.value) && 'message' in error.value) {
+        errorMessage.value = error.value.message as string;
+    } else if (!error.value) {
+        clearForm();
+        isVisibleLoginDialog.value = false;
     }
 }
-function onHide() {
+function clearForm() {
     email.value = '';
     password.value = '';
-    isLoginError.value = false;
+    errorMessage.value = null;
 }
 </script>
 <style lang="scss" scoped>
