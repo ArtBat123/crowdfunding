@@ -1,25 +1,27 @@
 <template>
     <div class="filter-container">
-        <div class="flex items-center">
-            <Checkbox
-                v-model="visibleFinishedProject"
-                :binary="true"
-                class="mr-2 mb-4"
-            />
-            <h3>Показывать закрытые проекты</h3>
-        </div>
-        <h3>Категории</h3>
-        <div class="categories-tree">
-            <Tree
-                :selection-keys="selectedCategories"
-                :value="categories"
-                selection-mode="checkbox"
-                @update:selection-keys="onSelectItem"
+        <div class="filter-title mb-2">Категории</div>
+        <Tree
+            :value="categoriesTree"
+            :selection-keys="selectedCategoryKeys"
+            selection-mode="checkbox"
+            @update:selection-keys="onSelectCategory"
+        >
+            <template #togglericon="{ expanded }">
+                <span :class="['pi', expanded ? 'pi-angle-up' : 'pi-angle-down']"></span>
+            </template>
+        </Tree>
+        <div class="flex justify-content-between align-items-center my-2">
+            <label
+                for="visibleFinishedProject"
+                class="filter-title filter-title_interactive"
             >
-                <template #togglericon="{ expanded }">
-                    <span :class="['pi', expanded ? 'pi-angle-up' : 'pi-angle-down']"></span>
-                </template>
-            </Tree>
+                Показывать закрытые проекты
+            </label>
+            <InputSwitch
+                v-model="visibleFinishedProject"
+                input-id="visibleFinishedProject"
+            />
         </div>
     </div>
 </template>
@@ -29,47 +31,32 @@ import { useDictionariesStore } from '@/stores/dictionaries/dictionaries';
 import { storeToRefs } from 'pinia';
 import { treeToPrimeTree } from '@/helpers/tree';
 import type { TreeNode } from 'primevue/treenode';
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 import type { TreeSelectionKeys } from 'primevue/tree';
-import { useProjectListStore } from '@/stores/projectList';
-import Checkbox from 'primevue/checkbox';
+import { useRouteQuerySync } from '@/composable/useRouteQuerySync';
 
-const router = useRouter();
 const dictionariesStore = useDictionariesStore();
-const projectsStore = useProjectListStore();
-const { projectCategories } = storeToRefs(dictionariesStore);
-const { queryParams } = storeToRefs(projectsStore);
-const visibleFinishedProject = ref(false);
-// TODO
-const selectedCategories = computed(() => {
-    const result: TreeSelectionKeys = {};
-    if (queryParams.value.subcategoryId) {
-        projectCategories.value.forEach((category) => {
-            let selectedSubcategoryCount = 0;
-            category.subcategoryList.forEach((subcategory) => {
-                if (queryParams.value.subcategoryId?.includes(subcategory.id.toString())) {
-                    const key = category.id + '-' + subcategory.id;
-                    result[key] = { checked: true, partialChecked: false };
-                    selectedSubcategoryCount++;
-                }
-            });
-            const key = category.id.toString();
-            if (selectedSubcategoryCount > 0) {
-                const partialChecked = selectedSubcategoryCount !== category.subcategoryList.length;
-                result[key] = {
-                    checked: !partialChecked,
-                    partialChecked: partialChecked,
-                };
-            }
-        });
-    }
-    return result;
+
+await dictionariesStore.getProjectCategories();
+await dictionariesStore.getProjectSubcategories();
+
+const selectedCategoriesId = useRouteQuerySync('categoriesId[]', {
+    mode: 'push',
+    transform: 'number[]',
+});
+const selectedSubcategoriesId = useRouteQuerySync('subcategoriesId[]', {
+    mode: 'push',
+    transform: 'number[]',
+});
+const visibleFinishedProject = useRouteQuerySync('visibleFinishedProject', {
+    mode: 'push',
+    transform: 'boolean',
 });
 
-dictionariesStore.getProjectCategories();
+const { projectCategories, projectCategoriesMap, projectSubcategoriesMap } =
+    storeToRefs(dictionariesStore);
 
-const categories = computed<TreeNode[]>(() =>
+const categoriesTree = computed<TreeNode[]>(() =>
     treeToPrimeTree(projectCategories.value, {
         label: 'name',
         key: 'id',
@@ -77,14 +64,49 @@ const categories = computed<TreeNode[]>(() =>
     })
 );
 
-function onSelectItem(value: TreeSelectionKeys) {
-    const keys = Object.keys(value);
-    const subcategoryIdList: string[] = [];
-    keys.forEach((item) => {
-        if (item.includes('-')) subcategoryIdList.push(item.split('-')[1]);
+const selectedCategoryKeys = computed<TreeSelectionKeys>(() => {
+    const result: Record<string, object> = {};
+
+    const selectAllSubcategories = (categoryId: number) => {
+        const subcategoryList = projectCategoriesMap.value.get(categoryId)?.subcategoryList;
+        subcategoryList?.forEach(
+            ({ id }) => (result[categoryId + '-' + id] = { checked: true, partialChecked: false })
+        );
+    };
+    selectedCategoriesId.value.forEach((categoryId) => {
+        result[categoryId] = { checked: true, partialChecked: false };
+        selectAllSubcategories(categoryId);
     });
-    queryParams.value.subcategoryId = subcategoryIdList;
-    router.push({ query: queryParams.value });
+
+    selectedSubcategoriesId.value.forEach((id) => {
+        const categoryId = projectSubcategoriesMap.value.get(id)?.categoryId as number;
+        const key = categoryId + '-' + id;
+        result[key] = { checked: true, partialChecked: false };
+        result[categoryId] = { checked: false, partialChecked: true };
+    });
+
+    return result;
+});
+
+async function onSelectCategory(selectionKeys: TreeSelectionKeys) {
+    const _selectedSubcategories: number[] = [];
+    const _selectedCategories: number[] = [];
+    const keyList = Object.keys(selectionKeys);
+
+    keyList.forEach((key) => {
+        if (selectionKeys[key].checked) {
+            const [category, subcategory] = key.split('-');
+
+            if (subcategory && selectionKeys[category].partialChecked) {
+                _selectedSubcategories.push(Number(subcategory));
+            } else if (!subcategory) {
+                _selectedCategories.push(Number(category));
+            }
+        }
+    });
+
+    selectedSubcategoriesId.value = _selectedSubcategories;
+    selectedCategoriesId.value = _selectedCategories;
 }
 </script>
 
@@ -93,9 +115,21 @@ function onSelectItem(value: TreeSelectionKeys) {
     min-width: 400px;
     width: 1px;
 }
+.filter-title {
+    color: var(--text-color);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    line-height: 100%;
+    &_interactive {
+        cursor: pointer;
+        padding-bottom: 4px;
+        &:hover {
+            color: var(--hover-text-color);
+        }
+    }
+}
 :deep(.p-tree) {
     padding: 0;
-
     .p-tree-toggler {
         order: 1;
     }
@@ -103,15 +137,17 @@ function onSelectItem(value: TreeSelectionKeys) {
         padding-left: 32px;
     }
     .p-checkbox {
-        min-height: 16px;
         height: 16px;
-        min-width: 16px;
         width: 16px;
+        min-width: 16px;
         margin-right: 4px;
         .p-checkbox-box {
             height: 100%;
             width: 100%;
         }
+    }
+    .p-treenode-content {
+        padding-left: 2px;
     }
 }
 </style>

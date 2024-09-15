@@ -55,6 +55,7 @@ import {
     InputIcon,
     Textarea,
     Editor,
+    InputSwitch,
 } from './components';
 
 export default function regPrimeVue(app: App) {
@@ -114,4 +115,5 @@ export default function regPrimeVue(app: App) {
     app.component('InputIcon', InputIcon);
     app.component('Textarea', Textarea);
     app.component('Editor', Editor);
+    app.component('InputSwitch', InputSwitch);
 }

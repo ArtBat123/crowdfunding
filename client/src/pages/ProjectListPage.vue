@@ -2,18 +2,7 @@
     <div class="content-container flex my-6">
         <ProjectsFilterPanel></ProjectsFilterPanel>
         <div class="right-panel">
-            <IconField
-                icon-position="left"
-                class="mb-4"
-            >
-                <InputIcon class="pi pi-search"> </InputIcon>
-                <InputText
-                    :model-value="queryParams.search"
-                    placeholder="Поиск проектов"
-                    class="w-full"
-                    @update:model-value="onSearchInput"
-                />
-            </IconField>
+            <ProjectListSearch />
             <ProjectsGrid v-if="!isLoadingProjects" />
             <Loader
                 v-else
@@ -28,45 +17,29 @@ import ProjectsFilterPanel from '@/components/projectList/ProjectsFilterPanel.vu
 import ProjectsGrid from '@/components/projectList/ProjectsGrid.vue';
 import Loader from '@/components/ui/Loader.vue';
 import { useBlockchainStore } from '@/stores/blockchain';
-import { debounce } from '@/helpers/common';
+import { onBeforeRouteUpdate, useRoute, type LocationQuery } from 'vue-router';
 import { useProjectListStore } from '@/stores/projectList';
-import { storeToRefs } from 'pinia';
-import {
-    onBeforeRouteUpdate,
-    useRoute,
-    useRouter,
-    type LocationQueryRaw,
-    type RouteLocationNormalizedLoaded,
-} from 'vue-router';
+import { ref } from 'vue';
+import ProjectListSearch from '@/components/projectList/ProjectListSearch.vue';
 
-const router = useRouter();
 const route = useRoute();
-const projectsStore = useProjectListStore();
-const { isLoadingProjects, queryParams } = storeToRefs(projectsStore);
-const { loadEthExchangeRate } = useBlockchainStore();
-await loadEthExchangeRate();
+const projectListStore = useProjectListStore();
+const blockchainStore = useBlockchainStore();
 
-const changeRouteQuery = debounce(
-    (queryParams: ProjectQueryParams) => router.push({ query: queryParams as LocationQueryRaw }),
-    300
-);
+const isLoadingProjects = ref(false);
+await blockchainStore.loadEthExchangeRate();
+loadProjectList(route.query);
 
-correlateDataWithRouting(route);
-
-function onSearchInput(value: string) {
-    const searchValue = value.trim() || undefined;
-    changeRouteQuery({ ...queryParams.value, search: searchValue });
-}
-function correlateDataWithRouting(route: RouteLocationNormalizedLoaded) {
-    const routeQuery = route.query;
-    if (routeQuery.subcategoryId && !Array.isArray(routeQuery.subcategoryId))
-        routeQuery.subcategoryId = [routeQuery.subcategoryId];
-    queryParams.value = { ...route.query };
-    projectsStore.loadProjectList();
+function loadProjectList(routeQuery: LocationQuery) {
+    projectListStore.clearProjectList();
+    projectListStore.loadProjectList(
+        routeQuery,
+        (newValue) => (isLoadingProjects.value = newValue)
+    );
 }
 
 onBeforeRouteUpdate((to) => {
-    correlateDataWithRouting(to);
+    loadProjectList(to.query);
 });
 </script>
 
@@ -75,8 +48,5 @@ onBeforeRouteUpdate((to) => {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    .pi-search {
-        top: calc(50% - 8px);
-    }
 }
 </style>

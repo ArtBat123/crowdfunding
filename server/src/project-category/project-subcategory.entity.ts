@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ProjectCategory } from './project-category.entity';
 
 @Entity({ name: 'project_subcategories_dictionary' })
@@ -12,9 +12,8 @@ export class ProjectSubcategory {
     @Column({ nullable: true })
     description: string;
 
-    @ManyToOne(
-        () => ProjectCategory,
-        (projectCategory) => projectCategory.subcategoryList,
-    )
-    category: ProjectCategory;
+    @Column()
+    @ManyToOne(() => ProjectCategory, (category: ProjectCategory) => category.id)
+    @JoinColumn({ name: 'categoryId' })
+    categoryId: number;
 }

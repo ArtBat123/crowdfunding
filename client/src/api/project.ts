@@ -1,5 +1,6 @@
 import HttpClient from '@/helpers/HttpClient';
 import axios from 'axios';
+import type { PaginatedResponse, PaginationParams } from './types';
 
 const abortControllers: Record<string, AbortController> = {};
 
@@ -14,15 +15,15 @@ export default {
         return response.data;
     },
 
-    async getWithFilters(queryParams: ProjectQueryParams) {
+    async getWithFilters(queryParams: ProjectListFilters, paginationParams: PaginationParams) {
         try {
             const abortControllersKey = 'get/project';
             if (abortControllers[abortControllersKey])
                 abortControllers[abortControllersKey].abort();
             abortControllers[abortControllersKey] = new AbortController();
 
-            const response = await HttpClient.get(`project`, {
-                params: queryParams,
+            const response = await HttpClient.get<PaginatedResponse<Project[]>>(`project`, {
+                params: { ...queryParams, ...paginationParams },
                 signal: abortControllers[abortControllersKey].signal,
             });
             return response.data;

@@ -1,36 +1,49 @@
 import api from '@/api/api';
+import { useAsyncData } from '@/composable/useAsyncData';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
+import type { LocationQuery } from 'vue-router';
 
 export const useProjectListStore = defineStore('projectList', () => {
     const projectList = ref<Project[]>([]);
-    const queryParams = ref<ProjectQueryParams>({});
-    const projectsRequestCount = ref(0);
+    const lastProjectId = ref<number>();
+    const isLastPage = ref(false);
+    const search = ref<string>();
+    const filters = ref({
+        categoriesId: [] as number[],
+        subcategoriesId: [],
+    });
 
-    const isLoadingProjects = computed(() => projectsRequestCount.value > 0);
-    async function loadProjectList() {
-        try {
-            projectsRequestCount.value++;
-            projectList.value = await api.project.getWithFilters(queryParams.value);
-        } finally {
-            projectsRequestCount.value--;
+    async function loadProjectList(queryParams: LocationQuery, setIsLoading: (v: boolean) => void) {
+        const { data, error } = await useAsyncData({
+            queryFn: () =>
+                api.project.getWithFilters(queryParams, {
+                    limit: 20,
+                    startKey: lastProjectId.value,
+                }),
+            setIsLoading,
+        });
+
+        if (!error.value && data.value) {
+            projectList.value.push(...data.value.data);
+            lastProjectId.value = data.value.endKey;
+            isLastPage.value = data.value.isLastPage;
         }
     }
-
     async function loadProjectListByUserId(userId: number) {
-        try {
-            projectsRequestCount.value++;
-            projectList.value = await api.project.getByUserId(userId);
-        } finally {
-            projectsRequestCount.value--;
-        }
+        projectList.value = await api.project.getByUserId(userId);
+    }
+    function clearProjectList() {
+        projectList.value = [];
     }
 
     return {
         projectList,
-        queryParams,
-        isLoadingProjects,
+        isLastPage,
+        search,
+        filters,
         loadProjectList,
         loadProjectListByUserId,
+        clearProjectList,
     };
 });

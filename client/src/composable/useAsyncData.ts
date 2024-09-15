@@ -1,13 +1,13 @@
 import { ref } from 'vue';
 
-interface Options {
-    queryFn: () => Promise<unknown>;
+interface Options<T> {
+    queryFn: () => Promise<T>;
     setIsLoading?: (newValue: boolean) => void;
 }
 
-export async function useAsyncData(options: Options) {
-    const data = ref<unknown>(null);
-    const error = ref<unknown>(null);
+export async function useAsyncData<T>(options: Options<T>) {
+    const data = ref<T>();
+    const error = ref<unknown>();
     const isLoading = ref(true);
 
     const { queryFn, setIsLoading } = options;

@@ -60,6 +60,9 @@ export class Project {
     @Column({ nullable: true, type: 'text' })
     story: string;
 
+    @Column({ default: false })
+    finished: boolean;
+
     @CreateDateColumn({ name: 'created_date' })
     createdDate: Date;
 

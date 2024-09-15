@@ -1,4 +1,5 @@
 :root {
+    /* Цвета */
     --blue-50: #f5f9ff;
     --blue-100: #d0e1fd;
     --blue-200: #abc9fb;
@@ -143,11 +144,25 @@
     --gray-800: #1e293b;
     --gray-900: #0f172a;
     --gray-950: #020617;
+    /* Размеры шрифтов */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.75rem;
+    --text-4xl: 2rem;
+    --text-5xl: 2.5rem;
+    --text-6xl: 3rem;
+    --text-7xl: 4rem;
+    --text-8xl: 6rem;
 
     --font-family: 'Inter var', sans-serif;
     --font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    --text-color: var(---gray-700);
-    --text-color-secondary: var(---gray-500);
+    --text-color: var(--gray-700);
+    --hover-text-color: var(--gray-600);
+    --text-color-secondary: var(--gray-500);
     --border-radius: 6px;
     --border-color: #e2e8f0;
     --card-color: #ffffff;
@@ -155,22 +170,6 @@
     --highlight-bg: #ecfdf5;
     --highlight-text-color: #047857;
     --mask-color: rgba(0, 0, 0, 0.3);
-}
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-}
-a {
-    color: var(--text-color);
-    text-decoration: none;
-}
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
 }
 
 html,

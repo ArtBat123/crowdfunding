@@ -12,9 +12,6 @@ export class ProjectCategory {
     @Column({ nullable: true })
     description: string;
 
-    @OneToMany(
-        () => ProjectSubcategory,
-        (projectSubcategory) => projectSubcategory.category,
-    )
+    @OneToMany(() => ProjectSubcategory, (projectSubcategory) => projectSubcategory.categoryId)
     subcategoryList: ProjectSubcategory[];
 }

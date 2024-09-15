@@ -8,14 +8,16 @@ type ProjectCategory = {
 type ProjectSubcategory = {
     id: number;
     name: string;
+    categoryId: number;
     description: string;
 };
 type ProjectCategoryList = ProjectCategory[];
 type ProjectSubcategoryList = ProjectSubcategory[];
 
-interface ProjectQueryParams {
-    subcategoryId?: string[];
-    search?: string;
+interface ProjectListFilters {
+    subcategoryId?: number[];
+    categoryId?: number[];
+    visibleFinishedProject?: boolean;
 }
 interface Project {
     id: number;

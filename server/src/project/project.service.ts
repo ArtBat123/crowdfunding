@@ -22,8 +22,7 @@ export class ProjectService {
     }
 
     async get(id: number) {
-        const fundsRaised =
-            await this.smartContractService.getProjectsFundsRaised([id]);
+        const fundsRaised = await this.smartContractService.getProjectsFundsRaised([id]);
         const countContributions =
             await this.smartContractService.getContributionsToProjectCount(id);
 
@@ -39,9 +38,7 @@ export class ProjectService {
         const projectIdList = projectList.map((item) => item.id);
 
         const fundsRaisedList =
-            await this.smartContractService.getProjectsFundsRaised(
-                projectIdList,
-            );
+            await this.smartContractService.getProjectsFundsRaised(projectIdList);
 
         return projectList.map((item, index) => ({
             ...item,
@@ -49,32 +46,54 @@ export class ProjectService {
         }));
     }
 
-    async getWithFilters(query) {
+    async getWithFilters(query: {
+        subcategoriesId?: string[];
+        categoriesId?: string[];
+        search?: string;
+        visibleFinishedProject?: string;
+        limit: number;
+        startKey?: number;
+    }) {
         let queryBuilder = this.projectRepository.createQueryBuilder('t');
 
-        if (query.subcategoryId)
-            queryBuilder = queryBuilder.where(
-                't.subcategoryId in (:...subcategoryId)',
-                { subcategoryId: query.subcategoryId },
-            );
+        if (query.subcategoriesId)
+            queryBuilder = queryBuilder.where('t.subcategoryId in (:...subcategoriesId)', {
+                subcategoriesId: query.subcategoriesId,
+            });
+
+        if (query.categoriesId)
+            queryBuilder = queryBuilder.where('t.categoryId in (:...categoriesId)', {
+                categoriesId: query.categoriesId,
+            });
 
         if (query.search)
             queryBuilder = queryBuilder.andWhere(`t.title like :title`, {
                 title: `%${query.search}%`,
             });
 
-        const projectList = await queryBuilder.getMany();
-        const projectIdList = projectList.map((item) => item.id);
+        if (!query.visibleFinishedProject)
+            queryBuilder = queryBuilder.andWhere(`t.finished = :visibleFinishedProject`, {
+                visibleFinishedProject: false,
+            });
 
-        const fundsRaisedList =
-            await this.smartContractService.getProjectsFundsRaised(
-                projectIdList,
-            );
+        // Если нужна не первая страница, находим данные для следующей
+        if (query.startKey)
+            queryBuilder = queryBuilder.andWhere(`t.id < :startKey`, { startKey: query.startKey });
 
-        return projectList.map((item, index) => ({
-            ...item,
-            fundsRaised: fundsRaisedList[index].toString(),
-        }));
+        const projectList = await queryBuilder.orderBy('t.id', 'DESC').limit(query.limit).getMany();
+
+        // const projectIdList = projectList.map((item) => item.id);
+        // const fundsRaisedList =
+        //     await this.smartContractService.getProjectsFundsRaised(projectIdList);
+
+        return {
+            data: projectList.map((item) => ({
+                ...item,
+                fundsRaised: /*fundsRaisedList[index].toString()*/ '1000',
+            })),
+            endKey: projectList.at(-1)?.id,
+            isLastPage: projectList.length < query.limit,
+        };
     }
 
     async updateStory(dto) {
