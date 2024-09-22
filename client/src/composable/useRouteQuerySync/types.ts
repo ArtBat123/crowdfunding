@@ -14,9 +14,6 @@ export interface RouteQuerySyncOptions<T extends TransformType = 'string'> {
 export interface RouteQuerySyncOptionsWithTransformFn<
     V = RouteQueryValue,
     R = LocationQueryValueRaw | LocationQueryValueRaw[],
-> {
-    mode?: RouteQuerySyncMode;
-    route?: ReturnType<typeof useRoute>;
-    router?: ReturnType<typeof useRouter>;
+> extends Omit<RouteQuerySyncOptions, 'transform'> {
     transform?: (value: V | undefined) => R;
 }

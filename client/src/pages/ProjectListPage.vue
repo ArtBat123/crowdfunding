@@ -1,7 +1,7 @@
 <template>
     <div class="content-container flex my-6">
         <ProjectsFilterPanel></ProjectsFilterPanel>
-        <div class="right-panel">
+        <div class="flex flex-column flex-grow-1 ml-4">
             <ProjectListSearch />
             <ProjectsGrid v-if="!isLoadingProjects" />
             <Loader
@@ -17,36 +17,20 @@ import ProjectsFilterPanel from '@/components/projectList/ProjectsFilterPanel.vu
 import ProjectsGrid from '@/components/projectList/ProjectsGrid.vue';
 import Loader from '@/components/ui/Loader.vue';
 import { useBlockchainStore } from '@/stores/blockchain';
-import { onBeforeRouteUpdate, useRoute, type LocationQuery } from 'vue-router';
 import { useProjectListStore } from '@/stores/projectList';
-import { ref } from 'vue';
 import ProjectListSearch from '@/components/projectList/ProjectListSearch.vue';
+import { storeToRefs } from 'pinia';
 
-const route = useRoute();
 const projectListStore = useProjectListStore();
 const blockchainStore = useBlockchainStore();
 
-const isLoadingProjects = ref(false);
+const { isLoadingProjects } = storeToRefs(projectListStore);
+
 await blockchainStore.loadEthExchangeRate();
-loadProjectList(route.query);
+loadProjectList();
 
-function loadProjectList(routeQuery: LocationQuery) {
+function loadProjectList() {
     projectListStore.clearProjectList();
-    projectListStore.loadProjectList(
-        routeQuery,
-        (newValue) => (isLoadingProjects.value = newValue)
-    );
+    projectListStore.loadProjectList();
 }
-
-onBeforeRouteUpdate((to) => {
-    loadProjectList(to.query);
-});
 </script>
-
-<style scoped lang="scss">
-.right-panel {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-</style>

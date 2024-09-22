@@ -175,6 +175,8 @@
 html,
 #app {
     height: 100%;
+    display: flex;
+    flex-direction: column;
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
 }

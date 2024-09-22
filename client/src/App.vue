@@ -2,9 +2,7 @@
     <Suspense>
         <router-view />
         <template #fallback>
-            <div class="w-full py-6">
-                <Loader class="mx-auto" />
-            </div>
+            <Loader class="m-auto" />
         </template>
     </Suspense>
 </template>

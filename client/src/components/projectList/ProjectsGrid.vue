@@ -19,7 +19,7 @@
             :loading="isLoadingMoreProjects"
             label="Показать еще"
             class="w-full mt-3"
-            @click="loadMoreProjects"
+            @click="projectListStore.addProjects"
         ></Button>
     </div>
 </template>
@@ -28,22 +28,10 @@
 import ProjectListItem from '@/components/projectList/ProjectListItem.vue';
 import { storeToRefs } from 'pinia';
 import { useProjectListStore } from '@/stores/projectList';
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
 import EmptyState from '@/components/projectList/EmptyState.vue';
 
 const projectListStore = useProjectListStore();
-const route = useRoute();
-const { projectList, isLastPage } = storeToRefs(projectListStore);
-
-const isLoadingMoreProjects = ref(false);
-
-function loadMoreProjects() {
-    projectListStore.loadProjectList(
-        route.query,
-        (newValue) => (isLoadingMoreProjects.value = newValue)
-    );
-}
+const { projectList, isLastPage, isLoadingMoreProjects } = storeToRefs(projectListStore);
 </script>
 
 <style scoped>

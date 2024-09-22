@@ -15,8 +15,8 @@ type ProjectCategoryList = ProjectCategory[];
 type ProjectSubcategoryList = ProjectSubcategory[];
 
 interface ProjectListFilters {
-    subcategoryId?: number[];
-    categoryId?: number[];
+    categoriesId?: number[];
+    subcategoriesId?: number[];
     visibleFinishedProject?: boolean;
 }
 interface Project {

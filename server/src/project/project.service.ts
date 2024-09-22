@@ -67,8 +67,8 @@ export class ProjectService {
             });
 
         if (query.search)
-            queryBuilder = queryBuilder.andWhere(`t.title like :title`, {
-                title: `%${query.search}%`,
+            queryBuilder = queryBuilder.andWhere(`lower(t.title) like :title`, {
+                title: `%${query.search.toLowerCase()}%`,
             });
 
         if (!query.visibleFinishedProject)

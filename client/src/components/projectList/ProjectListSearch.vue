@@ -5,7 +5,7 @@
     >
         <InputIcon class="pi pi-search"> </InputIcon>
         <InputText
-            v-model="search"
+            v-model.trim="search"
             placeholder="Поиск проектов"
             class="w-full"
             @update:model-value="onInput"
@@ -14,13 +14,18 @@
 </template>
 
 <script setup lang="ts">
+import { debounce } from '@/helpers/common';
 import { useProjectListStore } from '@/stores/projectList';
 import { storeToRefs } from 'pinia';
 
 const projectListStore = useProjectListStore();
 const { search } = storeToRefs(projectListStore);
 
-function onInput(value: string | undefined) {
-    console.log(value);
+const loadProjects = debounce(() => {
+    projectListStore.loadProjectList();
+}, 500);
+
+function onInput() {
+    loadProjects();
 }
 </script>

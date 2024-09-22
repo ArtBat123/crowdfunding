@@ -15,7 +15,11 @@ export default {
         return response.data;
     },
 
-    async getWithFilters(queryParams: ProjectListFilters, paginationParams: PaginationParams) {
+    async getWithFilters(
+        filters: ProjectListFilters,
+        paginationParams: PaginationParams,
+        search?: string
+    ) {
         try {
             const abortControllersKey = 'get/project';
             if (abortControllers[abortControllersKey])
@@ -23,7 +27,7 @@ export default {
             abortControllers[abortControllersKey] = new AbortController();
 
             const response = await HttpClient.get<PaginatedResponse<Project[]>>(`project`, {
-                params: { ...queryParams, ...paginationParams },
+                params: { ...filters, ...paginationParams, search: search || null },
                 signal: abortControllers[abortControllersKey].signal,
             });
             return response.data;

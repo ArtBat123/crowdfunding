@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 
 interface Options<T> {
     queryFn: () => Promise<T>;
@@ -6,7 +6,7 @@ interface Options<T> {
 }
 
 export async function useAsyncData<T>(options: Options<T>) {
-    const data = ref<T>();
+    const data = shallowRef<T>();
     const error = ref<unknown>();
     const isLoading = ref(true);
 

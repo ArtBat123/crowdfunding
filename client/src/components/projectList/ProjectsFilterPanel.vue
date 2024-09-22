@@ -19,7 +19,7 @@
                 Показывать закрытые проекты
             </label>
             <InputSwitch
-                v-model="visibleFinishedProject"
+                v-model="filters.visibleFinishedProject"
                 input-id="visibleFinishedProject"
             />
         </div>
@@ -33,28 +33,16 @@ import { treeToPrimeTree } from '@/helpers/tree';
 import type { TreeNode } from 'primevue/treenode';
 import { computed } from 'vue';
 import type { TreeSelectionKeys } from 'primevue/tree';
-import { useRouteQuerySync } from '@/composable/useRouteQuerySync';
+import { useProjectListStore } from '@/stores/projectList';
 
 const dictionariesStore = useDictionariesStore();
 
 await dictionariesStore.getProjectCategories();
 await dictionariesStore.getProjectSubcategories();
 
-const selectedCategoriesId = useRouteQuerySync('categoriesId[]', {
-    mode: 'push',
-    transform: 'number[]',
-});
-const selectedSubcategoriesId = useRouteQuerySync('subcategoriesId[]', {
-    mode: 'push',
-    transform: 'number[]',
-});
-const visibleFinishedProject = useRouteQuerySync('visibleFinishedProject', {
-    mode: 'push',
-    transform: 'boolean',
-});
-
 const { projectCategories, projectCategoriesMap, projectSubcategoriesMap } =
     storeToRefs(dictionariesStore);
+const { filters } = useProjectListStore();
 
 const categoriesTree = computed<TreeNode[]>(() =>
     treeToPrimeTree(projectCategories.value, {
@@ -73,12 +61,12 @@ const selectedCategoryKeys = computed<TreeSelectionKeys>(() => {
             ({ id }) => (result[categoryId + '-' + id] = { checked: true, partialChecked: false })
         );
     };
-    selectedCategoriesId.value.forEach((categoryId) => {
+    filters.categoriesId.forEach((categoryId) => {
         result[categoryId] = { checked: true, partialChecked: false };
         selectAllSubcategories(categoryId);
     });
 
-    selectedSubcategoriesId.value.forEach((id) => {
+    filters.subcategoriesId.forEach((id) => {
         const categoryId = projectSubcategoriesMap.value.get(id)?.categoryId as number;
         const key = categoryId + '-' + id;
         result[key] = { checked: true, partialChecked: false };
@@ -105,14 +93,14 @@ async function onSelectCategory(selectionKeys: TreeSelectionKeys) {
         }
     });
 
-    selectedSubcategoriesId.value = _selectedSubcategories;
-    selectedCategoriesId.value = _selectedCategories;
+    filters.subcategoriesId = _selectedSubcategories;
+    filters.categoriesId = _selectedCategories;
 }
 </script>
 
 <style scoped lang="scss">
 .filter-container {
-    min-width: 400px;
+    min-width: 350px;
     width: 1px;
 }
 .filter-title {
