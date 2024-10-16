@@ -31,6 +31,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import DateUtils from '@/helpers/dateUtils';
 import { useBlockchainStore } from '@/stores/blockchain';
 import { formatEther } from 'ethers';
 import { computed } from 'vue';
@@ -42,12 +43,9 @@ interface Props {
 const props = defineProps<Props>();
 const { ethToRubles } = useBlockchainStore();
 
-const deadlineDayCount = computed(() => {
-    const deadlineDate = new Date(props.project.deadline);
-    const result = (Number(deadlineDate) - Date.now()) / 1000 / 60 / 60 / 24;
-    return Math.floor(result);
-});
-
+const deadlineDayCount = computed(() =>
+    DateUtils.dateDiffInDays(new Date(), new Date(props.project.deadline))
+);
 const fundsRaised = computed(() => formatEther(BigInt(props.project.fundsRaised)));
 const progressBarValue = computed(() => {
     const percents = (Number(fundsRaised.value) / props.project.fundingGoal) * 100;
@@ -69,9 +67,6 @@ const progressBarValue = computed(() => {
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-    }
-    &-image {
-        height: 200px;
     }
     &-title {
         font-size: large;

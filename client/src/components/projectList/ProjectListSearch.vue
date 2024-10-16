@@ -21,9 +21,7 @@ import { storeToRefs } from 'pinia';
 const projectListStore = useProjectListStore();
 const { search } = storeToRefs(projectListStore);
 
-const loadProjects = debounce(() => {
-    projectListStore.loadProjectList();
-}, 500);
+const loadProjects = debounce(() => projectListStore.loadProjectList(), 500);
 
 function onInput() {
     loadProjects();

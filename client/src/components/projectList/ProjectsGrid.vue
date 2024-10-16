@@ -35,10 +35,6 @@ const { projectList, isLastPage, isLoadingMoreProjects } = storeToRefs(projectLi
 </script>
 
 <style scoped>
-.item {
-    margin: 10px;
-    height: 200px;
-}
 .projects-grid {
     display: grid;
     gap: 32px;

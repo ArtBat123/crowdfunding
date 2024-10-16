@@ -100,7 +100,7 @@ async function onSelectCategory(selectionKeys: TreeSelectionKeys) {
 
 <style scoped lang="scss">
 .filter-container {
-    min-width: 350px;
+    min-width: 300px;
     width: 1px;
 }
 .filter-title {
