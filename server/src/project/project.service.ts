@@ -1,9 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {
+    ConflictException,
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { Project } from './project.entity';
-import { CreateProjectDto } from './dto/create-project.dto';
+import { SaveProjectDto } from './dto/create-project.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SmartContractService } from 'src/smart-contract/smart-contract.service';
+import { UserJWTPayload } from 'src/auth/types';
 
 @Injectable()
 export class ProjectService {
@@ -13,7 +19,20 @@ export class ProjectService {
         private smartContractService: SmartContractService,
     ) {}
 
-    async create(dto: CreateProjectDto) {
+    async create(dto: SaveProjectDto, user: UserJWTPayload) {
+        const project = await this.projectRepository.findOneBy({ id: dto.id });
+        if (project) throw new ConflictException('Проект с таким ID уже существует');
+
+        const newProject = this.projectRepository.create({ ...dto, userId: user.userId });
+        return this.projectRepository.save(newProject);
+    }
+
+    async update(dto: SaveProjectDto, user: UserJWTPayload) {
+        const project = await this.projectRepository.findOneBy({ id: dto.id });
+        if (!project) throw new NotFoundException('Проект не найден');
+        if (project.userId !== user.userId)
+            throw new ForbiddenException('Нет доступа на редактирование данного проекта');
+
         return this.projectRepository.save(dto);
     }
 
@@ -33,6 +52,15 @@ export class ProjectService {
             countContributions: Number(countContributions),
         };
     }
+
+    async getNextId() {
+        const result = await this.projectRepository.manager.query(
+            `select nextval('seq_project_id') as value`,
+        );
+
+        return { value: Number(result[0].value) };
+    }
+
     async getByUserId(userId: number) {
         const projectList = await this.projectRepository.findBy({ userId });
         const projectIdList = projectList.map((item) => item.id);
@@ -82,14 +110,14 @@ export class ProjectService {
 
         const projectList = await queryBuilder.orderBy('t.id', 'DESC').limit(query.limit).getMany();
 
-        // const projectIdList = projectList.map((item) => item.id);
-        // const fundsRaisedList =
-        //     await this.smartContractService.getProjectsFundsRaised(projectIdList);
+        const projectIdList = projectList.map((item) => item.id);
+        const fundsRaisedList =
+            await this.smartContractService.getProjectsFundsRaised(projectIdList);
 
         return {
-            data: projectList.map((item) => ({
+            data: projectList.map((item, index) => ({
                 ...item,
-                fundsRaised: /*fundsRaisedList[index].toString()*/ '1000',
+                fundsRaised: fundsRaisedList[index].toString(),
             })),
             endKey: projectList.at(-1)?.id,
             isLastPage: projectList.length < query.limit,

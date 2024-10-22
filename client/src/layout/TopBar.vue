@@ -25,7 +25,7 @@
                     v-if="isAuth && userInfo"
                     class="flex align-items-center h-full"
                 >
-                    <RouterLink to="/projects/edit/base">
+                    <RouterLink to="/start-project-information">
                         <Button
                             label="Создать проект"
                             outlined

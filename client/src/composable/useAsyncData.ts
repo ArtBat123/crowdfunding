@@ -5,9 +5,10 @@ interface Options<T> {
     setIsLoading?: (newValue: boolean) => void;
 }
 
+// TODO
 export async function useAsyncData<T>(options: Options<T>) {
     const data = shallowRef<T>();
-    const error = ref<unknown>();
+    const error = ref<ServerError>();
     const isLoading = ref(true);
 
     const { queryFn, setIsLoading } = options;
@@ -16,7 +17,7 @@ export async function useAsyncData<T>(options: Options<T>) {
         setIsLoading && setIsLoading?.(true);
         data.value = await queryFn();
     } catch (e: unknown) {
-        error.value = e;
+        error.value = e as ServerError;
     } finally {
         isLoading.value = false;
         setIsLoading && setIsLoading(false);

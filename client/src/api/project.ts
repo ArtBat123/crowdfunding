@@ -10,6 +10,11 @@ export default {
         return response.data;
     },
 
+    async getNextId(): Promise<number> {
+        const response = await HttpClient.get(`project/next-id`);
+        return response.data.value;
+    },
+
     async getByUserId(userId: number) {
         const response = await HttpClient.get(`project/user/${userId}`);
         return response.data;
@@ -36,8 +41,13 @@ export default {
         }
     },
 
-    async create(payload: any) {
+    async create(payload: any): Promise<Project> {
         const response = await HttpClient.post('project', payload);
+        return response.data;
+    },
+
+    async update(payload: any): Promise<Project> {
+        const response = await HttpClient.put('project', payload);
         return response.data;
     },
 

@@ -1,0 +1,2 @@
+CREATE SEQUENCE IF NOT EXISTS seq_project_id
+START 1;

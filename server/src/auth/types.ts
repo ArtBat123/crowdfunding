@@ -7,3 +7,9 @@ export interface AuthSecurityData {
 export interface JWTPayload {
     userId: number;
 }
+
+export interface UserJWTPayload {
+    userId: number;
+    iat: number;
+    exp: number;
+}

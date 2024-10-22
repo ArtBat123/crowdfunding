@@ -1,24 +1,3 @@
-type ProjectCategory = {
-    id: number;
-    name: string;
-    description: string;
-    subcategoryList: ProjectSubcategoryList;
-};
-
-type ProjectSubcategory = {
-    id: number;
-    name: string;
-    categoryId: number;
-    description: string;
-};
-type ProjectCategoryList = ProjectCategory[];
-type ProjectSubcategoryList = ProjectSubcategory[];
-
-interface ProjectListFilters {
-    categoriesId?: number[];
-    subcategoriesId?: number[];
-    visibleFinishedProject?: boolean;
-}
 interface Project {
     id: number;
     title: string;
@@ -34,6 +13,26 @@ interface Project {
     createdDate: string;
     deadline: string;
     fundsRaised: string;
+}
+
+interface ProjectCategory {
+    id: number;
+    name: string;
+    description: string;
+    subcategoryList: ProjectSubcategory[];
+}
+
+interface ProjectSubcategory {
+    id: number;
+    name: string;
+    categoryId: number;
+    description: string;
+}
+
+interface ProjectListFilters {
+    categoriesId?: number[];
+    subcategoriesId?: number[];
+    visibleFinishedProject?: boolean;
 }
 
 interface ProjectCard extends Project {

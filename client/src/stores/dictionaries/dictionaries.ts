@@ -3,10 +3,10 @@ import { ref } from 'vue';
 import api from '@/api/api';
 
 export const useDictionariesStore = defineStore('dictionaries', () => {
-    const projectCategories = ref<ProjectCategoryList>([]);
+    const projectCategories = ref<ProjectCategory[]>([]);
     const projectCategoriesMap = ref(new Map<number, ProjectCategory>());
 
-    const projectSubcategories = ref<ProjectSubcategoryList>([]);
+    const projectSubcategories = ref<ProjectSubcategory[]>([]);
     const projectSubcategoriesMap = ref(new Map<number, ProjectSubcategory>());
 
     async function getProjectCategories() {

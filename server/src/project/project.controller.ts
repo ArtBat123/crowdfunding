@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { CreateProjectDto } from './dto/create-project.dto';
+import { SaveProjectDto } from './dto/create-project.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { User } from 'src/common/decorators/user.decorator';
+import { UserJWTPayload } from 'src/auth/types';
 
 @Controller('project')
 export class ProjectController {
@@ -9,8 +11,20 @@ export class ProjectController {
 
     @UseGuards(AuthGuard)
     @Post()
-    create(@Body() dto: CreateProjectDto) {
-        return this.projectService.create(dto);
+    create(@Body() dto: SaveProjectDto, @User() user: UserJWTPayload) {
+        return this.projectService.create(dto, user);
+    }
+
+    @UseGuards(AuthGuard)
+    @Put()
+    update(@Body() dto: SaveProjectDto, @User() user: UserJWTPayload) {
+        return this.projectService.update(dto, user);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('next-id')
+    getNextId() {
+        return this.projectService.getNextId();
     }
 
     @Get(':id')

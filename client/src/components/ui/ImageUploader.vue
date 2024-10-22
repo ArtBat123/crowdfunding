@@ -34,7 +34,7 @@
         </div>
         <div
             v-if="!(selectedImg || imageUrl)"
-            class="image-uploader-container"
+            :class="['image-uploader-container', { 'error-border': invalid }]"
             tabindex="0"
             @click.self="onClickOfContainer"
         >
@@ -54,6 +54,7 @@ import { onMounted, ref } from 'vue';
 interface Props {
     id: string;
     imageUrl?: string;
+    invalid?: boolean;
 }
 
 const props = defineProps<Props>();

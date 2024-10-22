@@ -163,6 +163,7 @@
     --text-color: var(--gray-700);
     --hover-text-color: var(--gray-600);
     --text-color-secondary: var(--gray-500);
+    --text-color-error: var(--red-500);
     --border-radius: 6px;
     --border-color: #e2e8f0;
     --card-color: #ffffff;
@@ -205,4 +206,11 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.error-text {
+    color: var(--text-color-error);
+}
+.error-border {
+    border-color: var(--text-color-error) !important;
 }

@@ -7,24 +7,33 @@
     <RouterView />
 </template>
 <script setup lang="ts">
+import { EditableProject } from '@/models/EditableProject';
 import { useProjectEditingStore } from '@/stores/projectEditing';
+import { storeToRefs } from 'pinia';
 import type { TabMenuChangeEvent } from 'primevue/tabmenu';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-const router = useRouter();
-const route = useRoute();
-const { loadProjectById } = useProjectEditingStore();
-await loadProjectById(Number(route.params.id));
 const tabItems = [
     { label: 'Основное', icon: 'pi pi-pen-to-square', routeName: 'projectBaseInfoEditing' },
     { label: 'Награды', icon: 'pi pi-gift', routeName: 'projectRewards' },
     { label: 'О проекте', icon: 'pi pi-book', routeName: 'aboutProject' },
     { label: 'Оплата', icon: 'pi pi-wallet', routeName: 'payment' },
 ];
-const activeTabIndex = computed(() => {
-    return tabItems.findIndex((item) => item.routeName === route.name);
-});
+
+const router = useRouter();
+const route = useRoute();
+const projectEditingStore = useProjectEditingStore();
+const { isNewProject } = storeToRefs(projectEditingStore);
+
+projectEditingStore.setIsNewProject(!!router.options.history.state.isNewProject);
+if (!isNewProject) {
+    await projectEditingStore.loadProjectById(Number(route.params.id));
+} else {
+    projectEditingStore.projectData = new EditableProject();
+}
+
+const activeTabIndex = computed(() => tabItems.findIndex((item) => item.routeName === route.name));
 
 function onTabChange(event: TabMenuChangeEvent) {
     const tabRouteName = tabItems[event.index].routeName;

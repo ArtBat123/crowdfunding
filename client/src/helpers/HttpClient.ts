@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/stores/auth';
-import axios from 'axios';
+import axios, { Axios, AxiosError } from 'axios';
 
 export const BASE_URL = '/api';
 export const BASE_HEADERS = {
@@ -26,8 +26,7 @@ HttpClient.interceptors.response.use(null, async (error) => {
             await useAuthStore().refreshTokens();
             return axios(error.config);
         } catch (e) {
-            console.error('Не авторизован');
-            throw e;
+            throw (e as AxiosError)?.response?.data;
         }
     }
 

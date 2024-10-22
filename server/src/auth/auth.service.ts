@@ -131,7 +131,7 @@ export class AuthService {
 
     private async verifyRefreshToken(refreshToken: string, authSecurityData: AuthSecurityData) {
         if (!refreshToken) {
-            throw new UnauthorizedException({ message: 'Пользователь не авторизован' });
+            throw new UnauthorizedException('Пользователь не авторизован');
         }
 
         let decodedData: JWTPayload;
@@ -140,7 +140,7 @@ export class AuthService {
                 secret: process.env.JWT_REFRESH_SECRET,
             });
         } catch (e) {
-            throw new UnauthorizedException({ message: 'Пользователь не авторизован' });
+            throw new UnauthorizedException('Пользователь не авторизован');
         }
 
         const refreshSession = await this.refreshSessionRepository.findOneBy({ refreshToken });
@@ -150,7 +150,7 @@ export class AuthService {
             refreshSession.ip !== authSecurityData.ip ||
             refreshSession.userAgent !== authSecurityData.userAgent
         ) {
-            throw new UnauthorizedException({ message: 'Пользователь не авторизован' });
+            throw new UnauthorizedException('Пользователь не авторизован');
         }
 
         return decodedData;

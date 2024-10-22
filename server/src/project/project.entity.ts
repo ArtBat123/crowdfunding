@@ -8,7 +8,7 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
-    PrimaryGeneratedColumn,
+    PrimaryColumn,
 } from 'typeorm';
 
 enum ProjectDurationType {
@@ -18,7 +18,7 @@ enum ProjectDurationType {
 
 @Entity({ name: 'projects' })
 export class Project {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     id: number;
 
     @Column()
@@ -62,6 +62,9 @@ export class Project {
 
     @Column({ default: false })
     finished: boolean;
+
+    @Column({ default: false })
+    published: boolean;
 
     @CreateDateColumn({ name: 'created_date' })
     createdDate: Date;

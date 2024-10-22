@@ -55,7 +55,12 @@ const router = createRouter({
                     ],
                 },
                 {
-                    path: '/projects/:id?/edit',
+                    path: '/start-project-information',
+                    name: 'startProjectInformation',
+                    component: () => import('@/pages/PreCreateProjectInformationPage.vue'),
+                },
+                {
+                    path: '/projects/:id/edit',
                     name: 'projectEditing',
                     redirect: { name: 'projectBaseInfoEditing' },
                     component: () => import('@/pages/ProjectEditingPage.vue'),
@@ -64,7 +69,7 @@ const router = createRouter({
                             path: 'base',
                             name: 'projectBaseInfoEditing',
                             component: () =>
-                                import('@/components/projectEditing/ProjectBaseInfo.vue'),
+                                import('@/components/projectEditing/projectBaseInformation/ProjectBaseInfo.vue'),
                         },
                         {
                             path: 'rewards',

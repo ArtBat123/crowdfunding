@@ -43,7 +43,7 @@
             </Password>
             <small
                 v-if="errorMessage"
-                class="text-red-500"
+                class="error-text"
             >
                 {{ errorMessage }}
             </small>
