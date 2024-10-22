@@ -17,6 +17,7 @@
                 ref="selectedImgEl"
                 alt="image"
                 class="selected-image"
+                :style="{ objectFit: props.objectFit }"
             />
             <div class="buttons-bar">
                 <Button
@@ -55,9 +56,10 @@ interface Props {
     id: string;
     imageUrl?: string;
     invalid?: boolean;
+    objectFit?: 'fill' | 'contain';
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), { objectFit: 'fill' });
 const emit = defineEmits<{
     (e: 'upload', file: File): void;
 }>();

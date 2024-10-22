@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useBlockchainStore = defineStore('blockchain', () => {
-    const ethExchangeRate = ref();
+    const ethExchangeRate = ref<number>();
 
     async function loadEthExchangeRate() {
         const response = await api.blockchain.getEthExchangeRate();
@@ -11,7 +11,7 @@ export const useBlockchainStore = defineStore('blockchain', () => {
     }
 
     function ethToRubles(eth = 0) {
-        return Math.round(eth * ethExchangeRate.value);
+        return ethExchangeRate.value ? Math.round(eth * ethExchangeRate.value) : null;
     }
 
     return { ethExchangeRate, loadEthExchangeRate, ethToRubles };

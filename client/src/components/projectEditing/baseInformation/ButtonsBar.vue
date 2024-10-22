@@ -7,9 +7,11 @@
             {{ errorMessage }}
         </span>
         <Button
-            label="Сохранить"
+            label="Сохранить и продолжить"
             :loading="isLoading"
-            class="w-10rem"
+            class="w-15rem"
+            icon="pi pi-arrow-right"
+            icon-pos="right"
             @click="saveProject"
         ></Button>
     </div>

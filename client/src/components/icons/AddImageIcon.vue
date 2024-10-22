@@ -19,7 +19,5 @@ interface Props {
     color?: string;
 }
 
-const { color } = withDefaults(defineProps<Props>(), {
-    color: '#9ca3af',
-});
+const { color = '#9ca3af' } = defineProps<Props>();
 </script>

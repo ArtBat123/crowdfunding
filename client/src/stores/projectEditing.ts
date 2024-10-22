@@ -1,12 +1,15 @@
 import api from '@/api/api';
 import { EditableProject } from '@/models/EditableProject';
+import { EditableReward } from '@/models/EditableReward';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useProjectEditingStore = defineStore('projectEditing', () => {
-    const rewardList = ref<any[]>([]);
     const projectData = ref(new EditableProject());
     const isNewProject = ref(false);
+
+    const rewardList = ref<any[]>([]);
+    const editableReward = ref<EditableReward>(new EditableReward());
 
     function setIsNewProject(value: boolean) {
         isNewProject.value = value;
@@ -20,6 +23,7 @@ export const useProjectEditingStore = defineStore('projectEditing', () => {
 
     return {
         rewardList,
+        editableReward,
         projectData,
         isNewProject,
         loadRewardListByProjectId,

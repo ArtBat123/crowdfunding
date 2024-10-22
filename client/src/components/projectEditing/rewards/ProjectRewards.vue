@@ -15,20 +15,24 @@
                 @click="openCreateForm"
             />
         </div>
-        <RewardList v-if="rewardList.length" />
+        <RewardList
+            v-if="rewardList.length"
+            @edit-item-click="onEditItemClick"
+        />
         <RewardEditingDialog v-model:visible="visibleEditDialog" />
     </div>
 </template>
 <script setup lang="ts">
-import RewardList from '@/components/projectEditing/RewardList.vue';
+import RewardList from '@/components/projectEditing/rewards/RewardList.vue';
 import { useProjectEditingStore } from '@/stores/projectEditing';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import RewardEditingDialog from './RewardEditingDialog.vue';
+import { EditableReward } from '@/models/EditableReward';
 
 const projectEditingStore = useProjectEditingStore();
-const { rewardList } = storeToRefs(projectEditingStore);
+const { rewardList, editableReward } = storeToRefs(projectEditingStore);
 const route = useRoute();
 const visibleEditDialog = ref<boolean>(false);
 
@@ -36,6 +40,12 @@ projectEditingStore.loadRewardListByProjectId(Number(route.params.id));
 
 function openCreateForm() {
     visibleEditDialog.value = true;
+    editableReward.value = new EditableReward();
+}
+function onEditItemClick(rewardId: number) {
+    visibleEditDialog.value = true;
+    const reward = rewardList.value.find((item) => (item.id = rewardId));
+    editableReward.value = new EditableReward(reward);
 }
 </script>
 <style scoped>

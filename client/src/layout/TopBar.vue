@@ -65,7 +65,6 @@
 
 <script setup lang="ts">
 import RegistrationDialog from '@/components/auth/RegistrationDialog.vue';
-import Button from '@/components/ui/Button.vue';
 import Divider from '@/components/ui/Divider.vue';
 import { useLayoutStore } from '@/stores/layout';
 import { useAuthStore } from '@/stores/auth';

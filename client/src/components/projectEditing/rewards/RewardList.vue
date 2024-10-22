@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="rewards-header">
-            <div>Название</div>
-            <div>Цена</div>
-            <div>Лимит наград</div>
-            <div>Изображение</div>
+            <div class="font-bold">Название</div>
+            <div class="font-bold">Цена</div>
+            <div class="font-bold">Лимит наград</div>
+            <div class="font-bold">Изображение</div>
         </div>
         <div
             v-for="reward in rewardList"
@@ -26,27 +26,56 @@
                 <Button
                     label="Редактировать"
                     link
+                    @click="emit('editItemClick', reward.id)"
                 />
                 <Button
                     label="Удалить"
                     link
                     @click="deleteReward(reward.id)"
                 />
+                <i
+                    v-show="isLoadingDeleting"
+                    class="pi pi-spin pi-spinner"
+                ></i>
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
 import api from '@/api/api';
+import { useAsyncData } from '@/composable/useAsyncData';
 import { useProjectEditingStore } from '@/stores/projectEditing';
 import { storeToRefs } from 'pinia';
+import { useToast } from 'primevue/usetoast';
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
+const emit = defineEmits<{
+    editItemClick: [rewardId: number];
+}>();
+
+const toast = useToast();
+const route = useRoute();
 const projectEditingStore = useProjectEditingStore();
-const { rewardList, projectData } = storeToRefs(projectEditingStore);
+const { rewardList } = storeToRefs(projectEditingStore);
+const isLoadingDeleting = ref(false);
 
 async function deleteReward(rewardId: number) {
-    await api.projectReward.delete(rewardId);
-    projectEditingStore.loadRewardListByProjectId(projectData.value.id);
+    const { error } = await useAsyncData({
+        queryFn: () => api.projectReward.delete(rewardId),
+        setIsLoading: (newValue) => (isLoadingDeleting.value = newValue),
+    });
+
+    if (error.value) {
+        toast.add({
+            severity: 'error',
+            summary: 'Неизвестная ошибка',
+            detail: 'Перезагрузите страницу и попробуйте еще раз',
+            life: 3000,
+        });
+    } else {
+        projectEditingStore.loadRewardListByProjectId(Number(route.params.id));
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -82,5 +111,6 @@ async function deleteReward(rewardId: number) {
     padding: 8px 16px;
     display: flex;
     justify-content: end;
+    align-items: center;
 }
 </style>

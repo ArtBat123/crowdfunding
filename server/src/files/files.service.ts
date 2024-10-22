@@ -16,10 +16,7 @@ export class FilesService {
             };
         } catch (e) {
             console.error(e);
-            throw new HttpException(
-                'Ошибка записи файла',
-                HttpStatus.INTERNAL_SERVER_ERROR,
-            );
+            throw new HttpException('Ошибка записи файла', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -69,13 +69,15 @@ const router = createRouter({
                             path: 'base',
                             name: 'projectBaseInfoEditing',
                             component: () =>
-                                import('@/components/projectEditing/projectBaseInformation/ProjectBaseInfo.vue'),
+                                import(
+                                    '@/components/projectEditing/baseInformation/ProjectBaseInfo.vue'
+                                ),
                         },
                         {
                             path: 'rewards',
                             name: 'projectRewards',
                             component: () =>
-                                import('@/components/projectEditing/ProjectRewards.vue'),
+                                import('@/components/projectEditing/rewards/ProjectRewards.vue'),
                         },
                         {
                             path: 'about',
