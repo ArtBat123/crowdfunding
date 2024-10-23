@@ -39,7 +39,7 @@ const errorMessage = ref<string>();
 const isLoading = ref(false);
 
 function getErrorFields() {
-    const excludeFields = ['expirationDate', 'numberDays'];
+    const excludeFields = ['expirationDate', 'numberDays', 'id'];
     let fields = Object.keys(projectData.value);
     fields = fields.filter((field) => !excludeFields.includes(field));
 

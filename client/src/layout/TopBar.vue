@@ -32,7 +32,7 @@
                             class="mr-4"
                         />
                     </RouterLink>
-                    <RouterLink :to="`/projects/user/${userInfo.userId}`">
+                    <RouterLink :to="`/my-projects`">
                         <Button
                             label="Мои проекты"
                             outlined

@@ -15,8 +15,8 @@ export default {
         return response.data.value;
     },
 
-    async getByUserId(userId: number) {
-        const response = await HttpClient.get(`project/user/${userId}`);
+    async getMyProjects() {
+        const response = await HttpClient.get(`project/my-projects`);
         return response.data;
     },
 

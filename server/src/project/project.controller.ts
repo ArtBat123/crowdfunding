@@ -27,14 +27,15 @@ export class ProjectController {
         return this.projectService.getNextId();
     }
 
+    @UseGuards(AuthGuard)
+    @Get('my-projects')
+    getByUserId(@User() user: UserJWTPayload) {
+        return this.projectService.getByUserId(user.userId);
+    }
+
     @Get(':id')
     get(@Param('id') id: number) {
         return this.projectService.get(id);
-    }
-
-    @Get('user/:userId')
-    getByUserId(@Param('userId') userId: number) {
-        return this.projectService.getByUserId(userId);
     }
 
     @Get()

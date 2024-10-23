@@ -98,7 +98,7 @@ const router = createRouter({
                     component: () => import('@/pages/RewardSelectingPage.vue'),
                 },
                 {
-                    path: '/projects/user/:userId',
+                    path: '/my-projects',
                     name: 'userProjects',
                     component: () => import('@/pages/UserProjects.vue'),
                 },

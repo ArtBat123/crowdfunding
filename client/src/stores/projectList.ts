@@ -42,8 +42,8 @@ export const useProjectListStore = defineStore('projectList', () => {
             projectList.value.push(...projects);
         }
     }
-    async function loadProjectListByUserId(userId: number) {
-        const projects = await api.project.getByUserId(userId);
+    async function loadProjectListByUserId() {
+        const projects = await api.project.getMyProjects();
         projectList.value = projects;
     }
     function clearProjectList() {

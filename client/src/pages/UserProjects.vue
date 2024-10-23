@@ -41,7 +41,6 @@
 <script setup lang="ts">
 import ProjectListItem from '@/components/projectList/ProjectListItem.vue';
 import Loader from '@/components/ui/Loader.vue';
-import { useAuthStore } from '@/stores/auth';
 import { useBlockchainStore } from '@/stores/blockchain';
 import { useProjectListStore } from '@/stores/projectList';
 import { storeToRefs } from 'pinia';
@@ -49,10 +48,9 @@ import { storeToRefs } from 'pinia';
 const projectsStore = useProjectListStore();
 const { isLoadingProjects, projectList } = storeToRefs(projectsStore);
 const { loadEthExchangeRate } = useBlockchainStore();
-const { userInfo } = useAuthStore();
 
 await loadEthExchangeRate();
-userInfo && (await projectsStore.loadProjectListByUserId(userInfo?.userId));
+await projectsStore.loadProjectListByUserId();
 </script>
 
 <style scoped lang="scss">
