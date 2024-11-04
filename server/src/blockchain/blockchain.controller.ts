@@ -6,13 +6,7 @@ export class BlockchainController {
     constructor(private projectService: BlockchainService) {}
 
     @Get('coins/price/:currency')
-    getExchangeRate(
-        @Param('currency') currency,
-        @Query('refundable-currency') refundableCurrency,
-    ) {
-        return this.projectService.getExchangeRate(
-            currency,
-            refundableCurrency,
-        );
+    getExchangeRate(@Param('currency') currency, @Query('refundable-currency') refundableCurrency) {
+        return this.projectService.getExchangeRate(currency, refundableCurrency);
     }
 }

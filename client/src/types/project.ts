@@ -48,6 +48,17 @@ interface ProjectReward {
     projectId: number;
     description: string;
 }
+interface ProjectComment {
+    id: number;
+    parentId?: number;
+    projectId: number;
+    user: {
+        id: number;
+        nickname: string;
+    };
+    text: string;
+    createdDate: string;
+}
 enum ProjectDurationType {
     ExpirationDate = 'expiration_date',
     NumberDays = 'number_days',

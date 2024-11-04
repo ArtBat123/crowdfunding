@@ -10,12 +10,17 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SmartContractService } from 'src/smart-contract/smart-contract.service';
 import { UserJWTPayload } from 'src/auth/types';
+import { CreateProjectCommentDto } from './dto/create-project-comment.dto';
+import { UpdateProjectCommentDto } from './dto/update-project-comment.dto';
+import { ProjectComment } from './project-comment.entity';
 
 @Injectable()
 export class ProjectService {
     constructor(
         @InjectRepository(Project)
         private projectRepository: Repository<Project>,
+        @InjectRepository(ProjectComment)
+        private projectCommentRepository: Repository<ProjectComment>,
         private smartContractService: SmartContractService,
     ) {}
 
@@ -136,5 +141,34 @@ export class ProjectService {
             id: dto.projectId,
             creatorEthAddress: dto.creatorEthAddress,
         });
+    }
+
+    async getComments(projectId: number) {
+        return this.projectCommentRepository.find({
+            select: { user: { id: true, nickname: true } },
+            where: { projectId },
+            relations: { user: true },
+            order: { createdDate: 'ASC' },
+        });
+    }
+
+    async createComment(projectId: number, dto: CreateProjectCommentDto, user: UserJWTPayload) {
+        const newComment = this.projectCommentRepository.create({
+            ...dto,
+            user: { id: user.userId },
+            projectId,
+        });
+
+        return this.projectCommentRepository.save(newComment);
+    }
+
+    async updateComment(dto: UpdateProjectCommentDto, user: UserJWTPayload) {
+        const comment = await this.projectCommentRepository.findOneBy({ id: dto.id });
+
+        if (!comment) throw new NotFoundException('Комментарий не найден');
+        if (comment.user.id !== user.userId)
+            throw new ForbiddenException('Нет доступа на редактирование данного комментария');
+
+        this.projectCommentRepository.update({ id: dto.id }, { text: dto.text });
     }
 }

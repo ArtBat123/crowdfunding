@@ -12,9 +12,11 @@ import regPrimeVue from '@/vendor/primevue';
 import { useAppSettingsStore } from './stores/appSettings';
 import { useAuthStore } from './stores/auth';
 import api from './api/api';
+import setupDayjs from './vendor/setupDayjs';
 
 (async () => {
     const app = createApp(App);
+    setupDayjs();
 
     app.use(createPinia());
     app.use(router);

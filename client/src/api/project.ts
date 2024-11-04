@@ -60,4 +60,14 @@ export default {
         const response = await HttpClient.put('project/creator-eth-address', payload);
         return response.data;
     },
+
+    async getComments(projectId: number) {
+        const response = await HttpClient.get(`project/${projectId}/comment`);
+        return response.data;
+    },
+
+    async createComment(projectId: number, text: string, parentId: null) {
+        const response = await HttpClient.post(`project/${projectId}/comment`, { parentId, text });
+        return response.data;
+    },
 };

@@ -50,7 +50,7 @@ const router = createRouter({
                         {
                             path: 'comments',
                             name: 'viewProjectComments',
-                            component: () => import('@/components/projectCard/ProjectComments.vue'),
+                            component: () => import('@/components/projectCard/comments/ProjectCommentsTab.vue'),
                         },
                     ],
                 },

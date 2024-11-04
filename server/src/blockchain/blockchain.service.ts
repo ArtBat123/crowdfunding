@@ -15,16 +15,13 @@ export class BlockchainService {
         vsCurrency: string,
     ): Observable<AxiosResponse<EthExchangeRateDto>> {
         return this.httpService
-            .get(
-                `${COINGECKO_URL}simple/price?ids=${currency}&vs_currencies=${vsCurrency}`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                        'x-cg-demo-api-key': process.env.COINGECKO_API_KEY,
-                    },
+            .get(`${COINGECKO_URL}simple/price?ids=${currency}&vs_currencies=${vsCurrency}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'x-cg-demo-api-key': process.env.COINGECKO_API_KEY,
                 },
-            )
+            })
             .pipe(map((response: AxiosResponse) => response.data));
     }
 }
