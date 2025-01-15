@@ -31,7 +31,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import DateUtils from '@/helpers/dateUtils';
+import DateUtils from '@/helpers/DateUtils';
 import { useBlockchainStore } from '@/stores/blockchain';
 import { formatEther } from 'ethers';
 import { computed } from 'vue';
