@@ -12,7 +12,7 @@ export class FilesService {
             fs.writeFileSync(path.join(filePath, fileName), file.buffer);
             return {
                 fileName,
-                fileUrl: 'http://localhost:5000/static/' + fileName,
+                fileUrl: '/static/' + fileName,
             };
         } catch (e) {
             console.error(e);
