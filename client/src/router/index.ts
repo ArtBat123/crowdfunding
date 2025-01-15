@@ -20,6 +20,7 @@ const router = createRouter({
                 {
                     path: '/',
                     name: 'home',
+                    redirect: '/projects',
                     component: () => import('@/pages/HomeView.vue'),
                 },
                 {
@@ -50,7 +51,8 @@ const router = createRouter({
                         {
                             path: 'comments',
                             name: 'viewProjectComments',
-                            component: () => import('@/components/projectCard/comments/ProjectCommentsTab.vue'),
+                            component: () =>
+                                import('@/components/projectCard/comments/ProjectCommentsTab.vue'),
                         },
                     ],
                 },
