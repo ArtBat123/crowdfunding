@@ -5,6 +5,7 @@
         modal
         :style="{ width: '25rem' }"
         @hide="clearForm"
+        @show="onShow"
     >
         <form>
             <InputText
@@ -41,11 +42,18 @@
             >
                 {{ errorMessage }}
             </small>
+            <div
+                ref="captchaContainerEl"
+                class="smart-captcha mt-4"
+                :data-sitekey="CAPTCHA_SITE_KEY"
+            ></div>
+
             <Button
                 label="Войти"
                 type="submit"
                 class="w-full mt-4"
                 :loading="isLoading"
+                :disabled="!successCaptcha || !password || !email"
                 @click.prevent="onLogin"
             />
         </form>
@@ -58,6 +66,7 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useAsyncData } from '@/composable/useAsyncData';
 import { isObject } from '@/helpers/typesHelper';
+import { CAPTCHA_SITE_KEY } from '@/consts/env';
 
 const layoutStore = useLayoutStore();
 const { login } = useAuthStore();
@@ -67,7 +76,18 @@ const email = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
+const captchaContainerEl = ref();
+const successCaptcha = ref(false);
 
+function onShow() {
+    if (captchaContainerEl.value) {
+        window.smartCaptcha.render(captchaContainerEl.value, {
+            sitekey: CAPTCHA_SITE_KEY,
+            test: true,
+            callback: (token) => (successCaptcha.value = !!token),
+        });
+    }
+}
 async function onLogin() {
     const { error } = await useAsyncData({
         queryFn: () => login(email.value, password.value),
