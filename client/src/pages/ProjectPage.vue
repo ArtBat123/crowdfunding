@@ -16,7 +16,7 @@
                 <ProgressBar :value="progressBarValue" />
                 <div class="flex justify-content-between align-items-center mt-3">
                     <div class="flex align-items-center">
-                        <div class="invested-count">{{ fundsRaised }} ETH</div>
+                        <div class="invested-count">{{ fundsRaised }} USD</div>
                         <span class="text-gray-500 ml-2">
                             ≈{{ ethToRubles(Number(fundsRaised)) }}₽
                         </span>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="funding-goal">
-                    Финансовая цель: {{ currencyFormat(currentProject?.fundingGoal) }} ETH
+                    Финансовая цель: {{ currencyFormat(currentProject?.fundingGoal) }} USDT
                 </div>
                 <div class="deadline">
                     <span>Осталось {{ deadlineDayCount }} дней</span>
@@ -72,7 +72,7 @@ import Loader from '@/components/ui/Loader.vue';
 import { useFormatter } from '@/composable/formatter';
 import { useBlockchainStore } from '@/stores/blockchain';
 import { useProjectStore } from '@/stores/project';
-import { formatEther } from 'ethers';
+import { ethers } from 'ethers';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
@@ -89,10 +89,10 @@ export default {
 <script setup lang="ts">
 const projectStore = useProjectStore();
 const { currentProject } = storeToRefs(projectStore);
-const { ethToRubles, loadEthExchangeRate } = useBlockchainStore();
+const { ethToRubles, loadUsdtExchangeRate } = useBlockchainStore();
 const { currencyFormat, dateFormat } = useFormatter();
 const route = useRoute();
-await loadEthExchangeRate();
+await loadUsdtExchangeRate();
 const tabs = [
     { label: 'О проекте', routeName: 'viewProjectStory' },
     { label: 'Вознаграждения', routeName: 'viewProjectRewards' },
@@ -104,7 +104,7 @@ const activeTabIndex = computed(() => {
     return tabs.findIndex((item) => item.routeName === route.name);
 });
 const fundsRaised = computed(() => {
-    return currentProject.value ? formatEther(BigInt(currentProject.value.fundsRaised)) : null;
+    return currentProject.value ? Number(currentProject.value.fundsRaised) / 10 ** 6 : null;
 });
 const deadlineDayCount = computed(() => {
     if (!currentProject.value) return null;

@@ -10,9 +10,14 @@ export const useBlockchainStore = defineStore('blockchain', () => {
         ethExchangeRate.value = response.ethereum.rub;
     }
 
+    async function loadUsdtExchangeRate() {
+        const response = await api.blockchain.getUsdtExchangeRate();
+        ethExchangeRate.value = response.usd.rub;
+    }
+
     function ethToRubles(eth = 0) {
         return ethExchangeRate.value ? Math.round(eth * ethExchangeRate.value) : null;
     }
 
-    return { ethExchangeRate, loadEthExchangeRate, ethToRubles };
+    return { ethExchangeRate, loadEthExchangeRate, loadUsdtExchangeRate, ethToRubles };
 });

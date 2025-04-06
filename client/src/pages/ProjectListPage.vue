@@ -26,7 +26,7 @@ const blockchainStore = useBlockchainStore();
 
 const { isLoadingProjects } = storeToRefs(projectListStore);
 
-await blockchainStore.loadEthExchangeRate();
+await blockchainStore.loadUsdtExchangeRate();
 loadProjectList();
 
 function loadProjectList() {

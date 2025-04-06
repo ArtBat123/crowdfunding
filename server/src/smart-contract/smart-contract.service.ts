@@ -1,30 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { ethers } from 'ethers';
 
-const CONTRACT_ADDRESS = '0xcd479158e3cb93b0754c484518023795cb9dee74';
+const CONTRACT_ADDRESS = '0x409E0d2A38C567649F6E87c7D251381cD3C8b169';
 const CONTRACT_ABI = {
     getProjectsFundsRaised:
         'function getProjectsFundsRaised(uint8[] memory projectIdList) external view returns (uint[] memory)',
     getContributionsToProjectCount:
         'function getContributionsToProjectCount(uint8 projectId) external view returns (uint8)',
 };
-const SEPOLIA_RPC_PROVIDER = 'https://rpc2.sepolia.org'; // 'sepolia'
 
 @Injectable()
 export class SmartContractService {
     async getProjectsFundsRaised(projectIdList: number[]) {
         const abi = [CONTRACT_ABI.getProjectsFundsRaised];
-        const provider = ethers.getDefaultProvider(SEPOLIA_RPC_PROVIDER);
+        const provider = ethers.getDefaultProvider(process.env.SEPOLIA_RPC_PROVIDER_URL);
         const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
 
-        return await contract.getProjectsFundsRaised(projectIdList);
+        const result = await contract.getProjectsFundsRaised(projectIdList);
+        return result;
     }
     async getContributionsToProjectCount(projectId: number): Promise<number> {
         const abi = [CONTRACT_ABI.getContributionsToProjectCount];
-        const provider = ethers.getDefaultProvider(SEPOLIA_RPC_PROVIDER);
+        const provider = ethers.getDefaultProvider(process.env.SEPOLIA_RPC_PROVIDER_URL);
         const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
 
-        return await contract.getContributionsToProjectCount(projectId);
+        const result = await contract.getContributionsToProjectCount(projectId);
+        return result;
     }
     getAddress() {
         return { address: CONTRACT_ADDRESS };

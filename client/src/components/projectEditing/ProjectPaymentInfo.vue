@@ -53,7 +53,7 @@ import api from '@/api/api';
 import { useAppSettingsStore } from '@/stores/appSettings';
 import { useLayoutStore } from '@/stores/layout';
 import { useProjectEditingStore } from '@/stores/projectEditing';
-import { Contract, parseEther } from 'ethers';
+import { Contract } from 'ethers';
 import { ethers } from 'ethers';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
@@ -77,7 +77,7 @@ async function linkWallet() {
             params: [{ chainId: workingEthereumNetwork.chainId }],
         });
         await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const provider = new ethers.BrowserProvider(window.ethereum);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = await provider.getSigner();
         walletAddress.value = await signer.getAddress();
     } else {
@@ -90,7 +90,7 @@ async function completeProjectCreation() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
 
     // Создаем провайдера и подписанта
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = await provider.getSigner();
 
     // ABI контракта CrowdfundingPlatform
@@ -110,7 +110,7 @@ async function completeProjectCreation() {
         // Выполняем транзакцию
         const tx = await crowdfundingContract.createProject(
             projectData.value.id,
-            parseEther(projectData.value.fundingGoal.toString()),
+            ethers.utils.parseEther(projectData.value.fundingGoal.toString()),
             duration
         );
         // Ожидаем подтверждения транзакции

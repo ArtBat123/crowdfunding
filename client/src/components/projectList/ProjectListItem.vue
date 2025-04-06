@@ -15,7 +15,7 @@
                 <div class="flex justify-content-between mb-2">
                     <div>
                         <span>Собрано: </span>
-                        <span class="font-semibold"> {{ fundsRaised }}ETH </span>
+                        <span class="font-semibold"> {{ fundsRaised }} USDT </span>
                         <small class="text-gray-500">
                             ≈ {{ ethToRubles(Number(fundsRaised)) }}₽
                         </small>
@@ -33,7 +33,6 @@
 <script setup lang="ts">
 import DateUtils from '@/helpers/DateUtils';
 import { useBlockchainStore } from '@/stores/blockchain';
-import { formatEther } from 'ethers';
 import { computed } from 'vue';
 
 interface Props {
@@ -46,7 +45,7 @@ const { ethToRubles } = useBlockchainStore();
 const deadlineDayCount = computed(() =>
     DateUtils.dateDiffInDays(new Date(), new Date(props.project.deadline))
 );
-const fundsRaised = computed(() => formatEther(BigInt(props.project.fundsRaised)));
+const fundsRaised = computed(() => Number(props.project.fundsRaised) / 10 ** 6);
 const progressBarValue = computed(() => {
     const percents = (Number(fundsRaised.value) / props.project.fundingGoal) * 100;
     return Math.round(percents);

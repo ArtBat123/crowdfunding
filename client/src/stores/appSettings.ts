@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useAppSettingsStore = defineStore('appSettings', () => {
-    const contractAddress = ref();
+    const contractAddress = ref('');
     const workingEthereumNetwork = {
         chainId: '0xaa36a7',
         chainName: 'eth-sepolia',

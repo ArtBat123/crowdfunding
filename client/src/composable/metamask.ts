@@ -1,30 +1,26 @@
 import { useAppSettingsStore } from '@/stores/appSettings';
-import { useLayoutStore } from '@/stores/layout';
-import type { Interface, InterfaceAbi } from 'ethers';
-import { Contract } from 'ethers';
-import { ethers, parseEther } from 'ethers';
+import { ethers, type ContractInterface } from 'ethers';
 import { storeToRefs } from 'pinia';
 
 export function useMetaMask() {
     const { contractAddress } = storeToRefs(useAppSettingsStore());
 
     async function sendPaymentToContract(
-        eth: number,
-        abi: Interface | InterfaceAbi,
-        abiParams: any[]
+        abi: ContractInterface,
+        projectId: number,
+        amount: bigint
     ) {
         if (window.ethereum) {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            await provider.send('eth_requestAccounts', []);
 
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            const crowdfundingContract = new Contract(contractAddress.value, abi, signer);
-            const priceInWei = parseEther(eth.toString());
+            const signer = provider.getSigner();
+            console.log(contractAddress.value, projectId, amount);
+            console.log(abi);
+            const crowdfundingContract = new ethers.Contract(contractAddress.value, abi, signer);
 
             // Выполняем транзакцию
-            const tx = await crowdfundingContract.contribute(...abiParams, {
-                value: priceInWei,
-            });
+            const tx = await crowdfundingContract.contribute(projectId, amount);
             await tx.wait();
         } else {
             console.error('MetaMask is not installed');
